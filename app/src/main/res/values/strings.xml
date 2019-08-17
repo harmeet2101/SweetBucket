@@ -51,4 +51,7 @@
     <string name="activity_title_sweets">Sweets</string>
     <string name="activity_title_home">Home</string>
     <string name="action_logout">Logout</string>
+
+
+    <string name="search_bar_hint">Search Sweets,Shops</string>
 </resources>

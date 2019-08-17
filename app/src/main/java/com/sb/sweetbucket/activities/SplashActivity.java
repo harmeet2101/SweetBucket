@@ -1,10 +1,11 @@
-package com.sb.sweetbucket;
+package com.sb.sweetbucket.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.sb.sweetbucket.R;
 
 public class SplashActivity extends Activity {
 

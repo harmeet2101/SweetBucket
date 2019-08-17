@@ -1,4 +1,4 @@
-package com.sb.sweetbucket;
+package com.sb.sweetbucket.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.fragments.HomeFragment;
 
 /**
  * Created by harmeet on 15-08-2019.
@@ -44,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_home);
+        setContentView(R.layout.layout_dashboard);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
