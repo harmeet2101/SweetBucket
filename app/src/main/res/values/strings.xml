@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">SweetBucket</string>
+
+
+    <string name="splash_loading_text">Loading Please wait...</string>
+    <string name="email_hint">Email/Mobile number</string>
+    <string name="pass_hint">Password</string>
+    <string name="login_text">LOGIN</string>
+    <string name="login_page_bottom_text_1">New to SweetsBucket?</string>
+    <string name="login_page_bottom_text_2">Create an account</string>
+    <string name="login_page_heading_1">Access to your Orders, Wishlist and Cart</string>
+    <string name="login_page_heading_0">LOGIN</string>
+    <string name="register_page_heading_0">Signup</string>
+    <string name="register_page_heading_1">Connect with us and get your favourite products at Home.</string>
+    <string name="name_hint">Your Name</string>
+    <string name="mobile_hint">Mobile</string>
+    <string name="email_text">Email (Optional)</string>
+    <string name="confirm_pass_text">Confirm password</string>
+    <string name="register_btn_text">Register</string>
+    <string name="register_page_bottom_text_1">Already have an account?</string>
+    <string name="register_page_bottom_text_2">Sign in</string>
+
+
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_home">Home</string>
+    <string name="nav_sweets">Sweets</string>
+    <string name="nav_shops">Shops</string>
+    <string name="nav_brands">Brands</string>
+    <string name="nav_popular">Popular</string>
+    <string name="nav_contact_us">Contact Us</string>
+    <string name="nav_about_us">About Us</string>
+    <string name="nav_logout">Logout</string>
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Home</item>
+        <item>Sweets</item>
+        <item>Shops</item>
+        <item>Brands</item>
+        <item>Popular</item>
+        <item>Contact Us</item>
+        <item>About Us</item>
+    </string-array>
+    <string name="activity_title_about_us">About Us</string>
+    <string name="activity_title_contact_us">Contact Us</string>
+    <string name="activity_title_popular">Popular</string>
+    <string name="activity_title_brands">Brands</string>
+    <string name="activity_title_shops">Shops</string>
+    <string name="activity_title_sweets">Sweets</string>
+    <string name="activity_title_home">Home</string>
+    <string name="action_logout">Logout</string>
+</resources>
