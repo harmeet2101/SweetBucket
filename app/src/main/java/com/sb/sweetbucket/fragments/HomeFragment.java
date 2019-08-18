@@ -1,6 +1,7 @@
 package com.sb.sweetbucket.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sb.sweetbucket.activities.ProductDetailsActivity;
 import com.sb.sweetbucket.adapters.HomeRecyclerAdapter;
 import com.sb.sweetbucket.R;
 
@@ -22,7 +24,7 @@ import java.util.List;
  */
 
 @SuppressLint("ValidFragment")
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnClick{
 
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
@@ -35,13 +37,12 @@ public class HomeFragment extends Fragment{
         recyclerView = (RecyclerView)view.findViewById(R.id.recylerview);
         gridLayoutManager  = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerAdapter = new HomeRecyclerAdapter(getActivity().getBaseContext(),createDummyData());
+        recyclerAdapter = new HomeRecyclerAdapter(getActivity().getBaseContext(),createDummyData(),this);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.HORIZONTAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL));
-
         recyclerView.setAdapter(recyclerAdapter);
         return view;
     }
@@ -52,5 +53,10 @@ public class HomeFragment extends Fragment{
         for(int i=0;i<=10;i++)
             l.add(""+i);
         return l;
+    }
+
+    @Override
+    public void testOnClick() {
+        getActivity().startActivity(new Intent(getActivity().getApplicationContext(),ProductDetailsActivity.class));
     }
 }

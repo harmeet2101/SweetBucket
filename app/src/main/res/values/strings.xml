@@ -54,4 +54,19 @@
 
 
     <string name="search_bar_hint">Search Sweets,Shops</string>
+    <string name="contact_us_heading">We are happy to answer any queries you might have.
+        Please fill out the form below and we will get in touch with you. </string>
+
+    <string name="about_us_text">
+         Hello and welcome to SweetsBucket.com, the place to find the best Indian Sweets and Mithai for every taste and occasion. We thoroughly check the quality of our goods, working only with reliable suppliers so that you only receive the best quality product.
+
+We at SweetsBucket.com believe in high quality and exceptional customer service. But most importantly, we believe shopping is a right, not a luxury, so we strive to deliver the best products at the most affordable prices, and ship them to you regardless of where you are located.
+
+The interests of our customers are always the top priority for us, so we hope you will enjoy our products as much as we enjoy making them available to you.
+
+If you’re looking for something new, you’re in the right place. We strive to be industrious and innovative, offering our customers something they want, putting their desires at the top of our priority list.
+
+We started as a small business in Varanasi [Kashi Vishwanath],in the northern Indian state of Uttar Pradesh in 2019, and our aim is to continue providing our customers with products that keep them happy, at prices that keep them happy.
+    </string>
+    <string name="app_close_dialog_message">Do you want to logout?</string>
 </resources>

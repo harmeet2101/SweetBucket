@@ -1,5 +1,6 @@
 package com.sb.sweetbucket.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,12 +10,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.fragments.AboutUsFragment;
+import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
 
 /**
@@ -40,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static final String TAG_CONTACT_US = "contact_us";
     private static final String TAG_ABOUT_US = "about_us";
     public static String CURRENT_TAG = TAG_HOME;
-
+    private TextView toolbarTitleTextview;
     // toolbar titles respected to selected nav menu item
     private String[] activityTitles;
 
@@ -50,7 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.layout_dashboard);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        toolbarTitleTextview = (TextView)findViewById(R.id.custom_toolbar_title);
         mHandler = new Handler();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,6 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setToolbarTitle() {
         getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+        toolbarTitleTextview.setText(activityTitles[navItemIndex]);
     }
 
     private void selectNavMenu() {
@@ -100,14 +106,14 @@ public class DashboardActivity extends AppCompatActivity {
                 HomeFragment homeFragment5 = new HomeFragment();
                 return homeFragment5;
             case 5:
-                // settings fragment
-                HomeFragment homeFragment6 = new HomeFragment();
-                return homeFragment6;
+                // contactUsFragment fragment
+                ContactUsFragment contactUsFragment = new ContactUsFragment();
+                return contactUsFragment;
 
             case 6:
-                // settings fragment
-                HomeFragment homeFragment7 = new HomeFragment();
-                return homeFragment7;
+                // aboutUsFragment fragment
+                AboutUsFragment aboutUsFragment = new AboutUsFragment();
+                return aboutUsFragment;
             default:
                 return new HomeFragment();
         }
@@ -209,7 +215,8 @@ public class DashboardActivity extends AppCompatActivity {
                     case R.id.nav_logout:
                        // navItemIndex = 7;
                         drawer.closeDrawers();
-                        return true;
+                       showLogoutAlertDialog();
+                        return false;
                     default:
                         navItemIndex = 0;
                 }
@@ -272,5 +279,30 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    private void showLogoutAlertDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.app_close_dialog_message).setTitle(R.string.app_name);
+
+        //Setting message manually and performing action on button click
+                builder.setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Action for 'NO' Button
+                        dialog.cancel();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

@@ -1,12 +1,14 @@
 package com.sb.sweetbucket.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.activities.ProductDetailsActivity;
 
 import java.util.List;
 
@@ -19,9 +21,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final String TAG = HomeRecyclerAdapter.class.getSimpleName();
     private Context mContext;
     private List<String> dataList;
-    public HomeRecyclerAdapter(Context mContext,List<String> dataList) {
+    private IOnClick iOnClick;
+    public HomeRecyclerAdapter(Context mContext,List<String> dataList,IOnClick iOnClick) {
         this.mContext = mContext;
         this.dataList = dataList;
+        this.iOnClick = iOnClick;
     }
 
     @Override
@@ -48,8 +52,19 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class DummyDataViewHolder extends RecyclerView.ViewHolder {
+        private ViewGroup mainView;
         public DummyDataViewHolder(View view) {
             super(view);
+            mainView = (ViewGroup)view.findViewById(R.id.mainView);
+            mainView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iOnClick.testOnClick();
+                }
+            });
         }
+    }
+    public interface IOnClick{
+        void testOnClick();
     }
 }

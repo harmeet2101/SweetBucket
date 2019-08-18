@@ -3,29 +3,37 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="@string/nav_home" />
+            android:title="@string/nav_home"
+            android:icon="@drawable/baseline_home_black_24"/>
         <item
             android:id="@+id/nav_sweets"
-            android:title="@string/nav_sweets"/>
+            android:title="@string/nav_sweets"
+            android:icon="@drawable/ic_sweets"/>
         <item
             android:id="@+id/nav_shops"
-            android:title="@string/nav_shops"/>
+            android:title="@string/nav_shops"
+            android:icon="@drawable/baseline_store_mall_directory_black_24"/>
 
         <item
             android:id="@+id/nav_brands"
-            android:title="@string/nav_brands"/>
+            android:title="@string/nav_brands"
+            android:icon="@drawable/baseline_local_offer_black_24"/>
 
         <item
             android:id="@+id/nav_popular"
-            android:title="@string/nav_popular"/>
+            android:title="@string/nav_popular"
+            android:icon="@drawable/baseline_stars_black_24"/>
         <item
             android:id="@+id/nav_contact_us"
-            android:title="@string/nav_contact_us"/>
+            android:title="@string/nav_contact_us"
+            android:icon="@drawable/baseline_contact_support_black_24"/>
         <item
             android:id="@+id/nav_about_us"
-            android:title="@string/nav_about_us"/>
+            android:title="@string/nav_about_us"
+            android:icon="@drawable/baseline_info_black_24"/>
         <item
             android:id="@+id/nav_logout"
-            android:title="@string/nav_logout"/>
+            android:title="@string/nav_logout"
+            android:icon="@drawable/baseline_power_settings_new_black_24"/>
     </group>
 </menu>

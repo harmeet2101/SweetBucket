@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -10,5 +10,9 @@
     </style>
     <style name="DrawerHamburgerStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="splashProgressBarStyle" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint" tools:ignore="NewApi">@android:color/white</item>
     </style>
 </resources>
