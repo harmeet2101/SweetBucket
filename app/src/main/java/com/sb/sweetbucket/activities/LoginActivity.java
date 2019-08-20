@@ -4,11 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.rest.RestAPIInterface;
+import com.sb.sweetbucket.rest.request.LoginRequest;
+import com.sb.sweetbucket.rest.response.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by harmeet on 15-08-2019.
@@ -33,6 +41,22 @@ public class LoginActivity extends AppCompatActivity{
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+                Call<LoginResponse> responseCall = apiInterface.doLogin(new LoginRequest("9319056542","test@1234"));
+                responseCall.enqueue(new Callback<LoginResponse>() {
+
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        Log.e("resp",response.body().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        Log.e("fail",t.getMessage());
+                    }
+                });
+
                 Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
