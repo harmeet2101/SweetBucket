@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.request.LoginRequest;
 import com.sb.sweetbucket.rest.response.LoginResponse;
@@ -26,11 +29,14 @@ public class LoginActivity extends AppCompatActivity{
 
     private TextView accountTextview;
     private Button loginButton;
+    private EditText usernameEdittext,passEdittext;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         accountTextview = (TextView)findViewById(R.id.accountTextview);
+        usernameEdittext = (EditText)findViewById(R.id.emailEdittext);
+        passEdittext = (EditText)findViewById(R.id.passEdittext);
         accountTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,12 +49,22 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View view) {
 
                 RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
-                Call<LoginResponse> responseCall = apiInterface.doLogin(new LoginRequest("9319056542","test@1234"));
+                Call<LoginResponse> responseCall = apiInterface.doLogin(new LoginRequest(usernameEdittext.getText().toString().trim(),
+                        passEdittext.getText().toString().trim()));
                 responseCall.enqueue(new Callback<LoginResponse>() {
 
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                         Log.e("resp",response.body().toString());
+                        if(response.body().getApiToken()!=null){
+
+                            SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
+                            controller.setIsUserLoggedIn(true);
+                            Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }else if (response.body().getMsg()!=null)
+                            Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -57,9 +73,7 @@ public class LoginActivity extends AppCompatActivity{
                     }
                 });
 
-                Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+
             }
         });
     }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/mainView"
+    android:layout_margin="10dp"
     android:background="#f1efef">
 
     <FrameLayout
@@ -25,7 +26,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ganga Ram Sweets"
+                android:text=""
+                android:id="@+id/vendorTextview"
                 android:textSize="10sp"
                 android:textColor="@android:color/white"
                 android:layout_margin="6dp"/>
@@ -68,6 +70,7 @@
             android:layout_height="wrap_content"
             android:text="20% Off"
             android:textSize="12sp"
+            android:id="@+id/discountTextview"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="10dp"
@@ -91,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rs 500"
+            android:id="@+id/basepriceTextview"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="10dp"

@@ -1,9 +1,7 @@
 package com.sb.sweetbucket.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
-import com.sb.sweetbucket.activities.ProductDetailsActivity;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
@@ -20,32 +17,27 @@ import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by harmeet on 17-08-2019.
+ * Created by harmeet on 24-08-2019.
  */
 
-public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
 
     private final String TAG = HomeRecyclerAdapter.class.getSimpleName();
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
 
-
     private Context mContext;
-    private List<Product> responseList;
-    private Map<String,String> vendorNameMap = new HashMap<>();
-    private Map<Integer,String> categoryNameMap = new HashMap<>();
-    private IOnClick iOnClick;
-    public HomeRecyclerAdapter(Context mContext,List<Product> responseList,IOnClick iOnClick) {
+    private List<Category> responseList;
+    public SweetsRecylerAdapter(Context mContext,List<Category> responseList) {
         this.mContext = mContext;
         this.responseList = responseList;
-        this.iOnClick = iOnClick;
     }
 
     @Override
@@ -55,17 +47,17 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM_TYPE__LOADING_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading,
                         parent, false);
-                return new LoadingDataViewHolder(view);
+                return new SweetsRecylerAdapter.LoadingDataViewHolder(view);
             }
             case ITEM_TYPE__EMPTY_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_empty_list,
                         parent, false);
-                return new EmptyDataViewHolder(view);
+                return new SweetsRecylerAdapter.EmptyDataViewHolder(view);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
-                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home_items,
+                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sweets_items,
                         parent, false);
-                return new ProductDataViewHolder(view3);
+                return new SweetsRecylerAdapter.ProductDataViewHolder(view3);
             }
         }
 
@@ -106,9 +98,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Product product){
-        ProductDataViewHolder dataViewHolder = (ProductDataViewHolder)holder;
-        dataViewHolder.updateView(product);
+    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Category category){
+        SweetsRecylerAdapter.ProductDataViewHolder dataViewHolder = (SweetsRecylerAdapter.ProductDataViewHolder)holder;
+        dataViewHolder.updateView(category);
     }
     @Override
     public int getItemCount() {
@@ -122,41 +114,28 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class ProductDataViewHolder extends RecyclerView.ViewHolder {
         private ViewGroup mainView;
-        private TextView tvSweetName,vendorTextview;
-        private TextView basePriceTextview,discountTextview,salePriceTextview;
+        private TextView tvSweetName;
         private ImageView imgview01;
-        private Product product;
+        private Category category;
         public ProductDataViewHolder(View view) {
             super(view);
             mainView = (ViewGroup)view.findViewById(R.id.mainView);
             imgview01 = (ImageView)view.findViewById(R.id.imgview01);
             tvSweetName = (TextView)view.findViewById(R.id.tvSweetName);
-            basePriceTextview = (TextView)view.findViewById(R.id.basepriceTextview);
-            discountTextview = (TextView)view.findViewById(R.id.discountTextview);
-            salePriceTextview = (TextView)view.findViewById(R.id.tvPrice);
-            vendorTextview = (TextView)view.findViewById(R.id.vendorTextview);
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getProductCode(),product.getName(),
-                            categoryNameMap.get(Integer.parseInt(product.getCat1Id())),vendorNameMap.get(product.getVendorId())
-                    ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
-                            product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));
+
                 }
             });
         }
 
-        public void updateView(Product product){
-            this.product = product;
-            tvSweetName.setText(product.getName());
-            salePriceTextview.setText("Rs "+product.getSalePrice());
-            basePriceTextview.setText("Rs "+product.getBasePrice());
-            discountTextview.setText(product.getDiscount()+" Off");
-            Picasso.with(mContext).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
-                    placeholder(R.drawable.dummy_img).into(imgview01);
-            vendorTextview.setText(vendorNameMap.get(product.getVendorId()));
+        public void updateView(Category category){
 
+            this.category = category;
+            tvSweetName.setText(category.getName());
+            Picasso.with(mContext).load(RestAppConstants.BASE_URL +category.getCatImage() ).
+                    placeholder(R.drawable.dummy_img).into(imgview01);
         }
     }
 
@@ -172,18 +151,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public interface IOnClick{
-        void testOnClick(ProductDetails productDetails);
-    }
-    public void updateDataSource(HomeResponse homeResponse){
-        this.responseList = homeResponse.getProducts();
-        notifyDataSetChanged();
 
-        for(Shop shop:homeResponse.getShops()){
-            vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
-        }
-        for(Category category:homeResponse.getCategory()){
-            categoryNameMap.put(category.getId(),category.getName());
-        }
+    public void updateDataSource(List<Category> category){
+        this.responseList =category;
+        notifyDataSetChanged();
     }
 }

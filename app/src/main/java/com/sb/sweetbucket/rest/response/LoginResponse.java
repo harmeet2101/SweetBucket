@@ -20,13 +20,16 @@ public class LoginResponse implements Serializable{
     private String apiToken;
     @SerializedName("mobile")
     private String mobile;
+    @SerializedName("msg")
+    private String msg;
 
-    public LoginResponse(int id, String name, String email, String apiToken, String mobile) {
+    public LoginResponse(int id, String name, String email, String apiToken, String mobile,String msg) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.apiToken = apiToken;
         this.mobile = mobile;
+        this.msg = msg;
     }
 
     public int getId() {
@@ -69,6 +72,14 @@ public class LoginResponse implements Serializable{
         this.mobile = mobile;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
@@ -77,6 +88,7 @@ public class LoginResponse implements Serializable{
                 ", email='" + email + '\'' +
                 ", apiToken='" + apiToken + '\'' +
                 ", mobile='" + mobile + '\'' +
+                ", msg='" + msg + '\'' +
                 '}';
     }
 }

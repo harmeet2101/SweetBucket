@@ -13,14 +13,26 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.fragments.AboutUsFragment;
 import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
+import com.sb.sweetbucket.fragments.ShopFragment;
+import com.sb.sweetbucket.fragments.SweetsFragment;
+import com.sb.sweetbucket.rest.RestAPIInterface;
+import com.sb.sweetbucket.rest.request.HomeRequest;
+import com.sb.sweetbucket.rest.response.HomeResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by harmeet on 15-08-2019.
@@ -28,6 +40,7 @@ import com.sb.sweetbucket.fragments.HomeFragment;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    private final String TAG = DashboardActivity.class.getSimpleName();
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -89,13 +102,13 @@ public class DashboardActivity extends AppCompatActivity {
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
             case 1:
-                // photos
-                HomeFragment homeFragment2 = new HomeFragment();
-                return homeFragment2;
+                // sweets
+                SweetsFragment sweetsFragment = new SweetsFragment();
+                return sweetsFragment;
             case 2:
-                // movies fragment
-                HomeFragment homeFragment3 = new HomeFragment();
-                return homeFragment3;
+                // shop fragment
+                ShopFragment shopFragment = new ShopFragment();
+                return shopFragment;
             case 3:
                 // notifications fragment
                 HomeFragment homeFragment4 = new HomeFragment();
@@ -290,6 +303,8 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
+                        controller.setIsUserLoggedIn(false);
                         dialog.cancel();
                         finish();
 

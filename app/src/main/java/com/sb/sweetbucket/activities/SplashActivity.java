@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Bundle;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.controllers.SharedPreferncesController;
 
 public class SplashActivity extends Activity {
 
@@ -17,15 +18,26 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                moveToNextScreen();
+
+                SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
+                if (controller.isUserLoggedIn())
+                moveToHomeScreen();
+                else
+                    moveToLoginScreen();
             }
         },TIME_DELAY);
     }
 
 
-    private void moveToNextScreen(){
+    private void moveToLoginScreen(){
 
         startActivity(new Intent(getBaseContext(),LoginActivity.class));
+        finish();
+    }
+
+    private void moveToHomeScreen(){
+
+        startActivity(new Intent(getBaseContext(),DashboardActivity.class));
         finish();
     }
 }

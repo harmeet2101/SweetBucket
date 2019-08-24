@@ -85,6 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/bulletView01"
                     android:text="Product Code: ABCDEFGH1234@@"
+                    android:id="@+id/pCodeTextview"
                     android:textColor="@android:color/black"
                     android:layout_margin="14dp"/>
 
@@ -102,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/bulletView02"
                     android:layout_below="@id/bulletView01"
-                    android:text="Product Unit: 1Kg"
+                    android:text="Product Unit: Kg"
                     android:textColor="@android:color/black"
                     android:layout_margin="14dp"/>
 
@@ -120,6 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/bulletView03"
                     android:layout_below="@id/bulletView02"
+                    android:id="@+id/pCategoryTextview"
                     android:text="Product Category: Barfi"
                     android:textColor="@android:color/black"
                     android:layout_margin="14dp"/>
@@ -206,6 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="20% Off"
+                        android:id="@+id/discountTextview"
                         android:textSize="12sp"
                         android:layout_marginTop="6dp"
                         android:layout_marginBottom="6dp"
@@ -227,6 +230,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_18"
                         android:text="Rs 500"
+                        android:id="@+id/basepriceTextview"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:textColor="@android:color/holo_orange_dark" />
@@ -271,6 +275,63 @@
                 android:layout_marginLeft="20dp"/>
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Info"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="normal"
+                android:textColor="@android:color/holo_orange_dark"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/holo_orange_dark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="normal"
+                android:id="@+id/proInfoTextview"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vendor"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="normal"
+                android:textColor="@android:color/holo_orange_dark"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/holo_orange_dark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vendor Name"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="normal"
+                android:id="@+id/vendorTextview"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="40dp"/>
         </LinearLayout>    
     </ScrollView>
 </LinearLayout>
