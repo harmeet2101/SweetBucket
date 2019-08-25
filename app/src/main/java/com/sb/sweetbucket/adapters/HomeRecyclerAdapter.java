@@ -96,6 +96,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM_TYPE__LOADING_LIST:
                 break;
             case ITEM_TYPE__EMPTY_LIST:
+                EmptyDataViewHolder emptyDataViewHolder = (EmptyDataViewHolder) holder;
                 break;
             case ITEM_TYPE_PRODUCT_ITEM:
                 bindProductViewHolder(holder,responseList.get(position));

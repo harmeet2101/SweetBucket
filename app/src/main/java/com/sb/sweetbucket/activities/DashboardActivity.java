@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,19 +25,12 @@ import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
 import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.fragments.SweetsFragment;
-import com.sb.sweetbucket.rest.RestAPIInterface;
-import com.sb.sweetbucket.rest.request.HomeRequest;
-import com.sb.sweetbucket.rest.response.HomeResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by harmeet on 15-08-2019.
  */
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements SweetsFragment.ISweetFragmentListener{
 
     private final String TAG = DashboardActivity.class.getSimpleName();
     private NavigationView navigationView;
@@ -277,7 +269,9 @@ public class DashboardActivity extends AppCompatActivity {
             drawer.closeDrawers();
             return;
         }
-
+        /*if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        }*/
         // This code loads home fragment when back key is pressed
         // when user is in other fragment than home
         if (shouldLoadHomeFragOnBackPress) {
@@ -290,7 +284,6 @@ public class DashboardActivity extends AppCompatActivity {
                 return;
             }
         }
-
         super.onBackPressed();
     }
 
@@ -319,5 +312,17 @@ public class DashboardActivity extends AppCompatActivity {
         //Creating dialog box
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    //TODO add sweetCategory frag here 25-8-19
+    @Override
+    public void onSweetsItemSelected(String category) {
+
+        /*Fragment fragment = new ContactUsFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.commitAllowingStateLoss();*/
     }
 }

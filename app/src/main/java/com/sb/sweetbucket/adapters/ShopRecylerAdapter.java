@@ -27,7 +27,6 @@ public class ShopRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-
     private Context mContext;
     private List<ShopsResponse> responseList;
     public ShopRecylerAdapter(Context mContext,List<ShopsResponse> responseList) {

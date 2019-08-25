@@ -9,17 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
-import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
-import com.sb.sweetbucket.rest.response.HomeResponse;
-import com.sb.sweetbucket.rest.response.Product;
-import com.sb.sweetbucket.rest.response.Shop;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by harmeet on 24-08-2019.
@@ -32,12 +26,14 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-
+    private ISweetsRecylerListener sweetsFragmentListener;
     private Context mContext;
     private List<Category> responseList;
-    public SweetsRecylerAdapter(Context mContext,List<Category> responseList) {
+    public SweetsRecylerAdapter(Context mContext,List<Category> responseList,
+                                ISweetsRecylerListener sweetsFragmentListener) {
         this.mContext = mContext;
         this.responseList = responseList;
+        this.sweetsFragmentListener = sweetsFragmentListener;
     }
 
     @Override
@@ -126,6 +122,7 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View view) {
 
+                    sweetsFragmentListener.onShopCategorySelected(category.getName());
                 }
             });
         }
@@ -155,5 +152,10 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void updateDataSource(List<Category> category){
         this.responseList =category;
         notifyDataSetChanged();
+    }
+
+    public interface ISweetsRecylerListener {
+
+        void onShopCategorySelected(String category);
     }
 }
