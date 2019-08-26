@@ -35,6 +35,7 @@ public class Product implements Serializable{
     private String approved;
     private Object approvedAt;
     private Object deletedAt;
+    @SerializedName("created_at")
     private String createdAt;
     private String updatedAt;
     public Integer getId() {

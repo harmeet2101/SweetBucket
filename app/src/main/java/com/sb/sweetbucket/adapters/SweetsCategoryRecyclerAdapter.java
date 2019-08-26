@@ -11,29 +11,29 @@ import android.widget.TextView;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
+import com.sb.sweetbucket.rest.response.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
- * Created by harmeet on 24-08-2019.
+ * Created by harmeet on 26-08-2019.
  */
 
-public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private final String TAG = SweetsRecylerAdapter.class.getSimpleName();
+    private final String TAG = SweetsCategoryRecyclerAdapter.class.getSimpleName();
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-    private ISweetsRecylerListener sweetsFragmentListener;
+
     private Context mContext;
-    private List<Category> responseList;
-    public SweetsRecylerAdapter(Context mContext,List<Category> responseList,
-                                ISweetsRecylerListener sweetsFragmentListener) {
+    private List<Product> responseList;
+
+    public SweetsCategoryRecyclerAdapter(Context mContext,List<Product> responseList) {
         this.mContext = mContext;
         this.responseList = responseList;
-        this.sweetsFragmentListener = sweetsFragmentListener;
     }
 
     @Override
@@ -43,17 +43,17 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             case ITEM_TYPE__LOADING_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading,
                         parent, false);
-                return new SweetsRecylerAdapter.LoadingDataViewHolder(view);
+                return new SweetsCategoryRecyclerAdapter.LoadingDataViewHolder(view);
             }
             case ITEM_TYPE__EMPTY_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_empty_list,
                         parent, false);
-                return new SweetsRecylerAdapter.EmptyDataViewHolder(view);
+                return new SweetsCategoryRecyclerAdapter.EmptyDataViewHolder(view);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
-                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sweets_items,
+                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home_items,
                         parent, false);
-                return new SweetsRecylerAdapter.ProductDataViewHolder(view3);
+                return new SweetsCategoryRecyclerAdapter.ProductDataViewHolder(view3);
             }
         }
 
@@ -61,6 +61,7 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
         return null;
 
     }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -76,6 +77,7 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
         return viewType;
     }
 
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -89,14 +91,11 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 bindProductViewHolder(holder,responseList.get(position));
                 break;
         }
-
-
     }
 
-
-    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Category category){
-        SweetsRecylerAdapter.ProductDataViewHolder dataViewHolder = (SweetsRecylerAdapter.ProductDataViewHolder)holder;
-        dataViewHolder.updateView(category);
+    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Product product){
+        SweetsCategoryRecyclerAdapter.ProductDataViewHolder dataViewHolder = (SweetsCategoryRecyclerAdapter.ProductDataViewHolder)holder;
+        dataViewHolder.updateView(product);
     }
     @Override
     public int getItemCount() {
@@ -108,30 +107,38 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     }
 
+
     private class ProductDataViewHolder extends RecyclerView.ViewHolder {
         private ViewGroup mainView;
-        private TextView tvSweetName;
+        private TextView tvSweetName,vendorTextview;
+        private TextView basePriceTextview,discountTextview,salePriceTextview;
         private ImageView imgview01;
-        private Category category;
+        private Product product;
         public ProductDataViewHolder(View view) {
             super(view);
             mainView = (ViewGroup)view.findViewById(R.id.mainView);
             imgview01 = (ImageView)view.findViewById(R.id.imgview01);
             tvSweetName = (TextView)view.findViewById(R.id.tvSweetName);
+            basePriceTextview = (TextView)view.findViewById(R.id.basepriceTextview);
+            discountTextview = (TextView)view.findViewById(R.id.discountTextview);
+            salePriceTextview = (TextView)view.findViewById(R.id.tvPrice);
+            vendorTextview = (TextView)view.findViewById(R.id.vendorTextview);
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    sweetsFragmentListener.onShopCategorySelected(category.getName());
                 }
             });
         }
 
-        public void updateView(Category category){
+        public void updateView(Product product){
 
-            this.category = category;
-            tvSweetName.setText(category.getName());
-            Picasso.with(mContext).load(RestAppConstants.BASE_URL +category.getCatImage() ).
+            this.product = product;
+            tvSweetName.setText(product.getName());
+            salePriceTextview.setText("Rs "+product.getSalePrice());
+            basePriceTextview.setText("Rs "+product.getBasePrice());
+            discountTextview.setText(product.getDiscount()+" Off");
+            Picasso.with(mContext).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);
         }
     }
@@ -149,13 +156,8 @@ public class SweetsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    public void updateDataSource(List<Category> category){
-        this.responseList =category;
+    public void updateDataSource(List<Product> products){
+        this.responseList =products;
         notifyDataSetChanged();
-    }
-
-    public interface ISweetsRecylerListener {
-
-        void onShopCategorySelected(String category);
     }
 }

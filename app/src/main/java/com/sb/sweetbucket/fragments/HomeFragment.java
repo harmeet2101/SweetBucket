@@ -1,6 +1,7 @@
 package com.sb.sweetbucket.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sb.sweetbucket.activities.LoginActivity;
 import com.sb.sweetbucket.activities.ProductDetailsActivity;
 import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.HomeRecyclerAdapter;
@@ -88,6 +90,7 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
 
 
     private void loadSuggestionData(String suggestion){
+
         RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
         Call<HomeResponse> responseCall = apiInterface.getSuggestion(new HomeRequest(suggestion));
         responseCall.enqueue(new Callback<HomeResponse>() {

@@ -24,6 +24,7 @@ import com.sb.sweetbucket.fragments.AboutUsFragment;
 import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
 import com.sb.sweetbucket.fragments.ShopFragment;
+import com.sb.sweetbucket.fragments.SweetCategoryFragment;
 import com.sb.sweetbucket.fragments.SweetsFragment;
 
 /**
@@ -318,11 +319,11 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
     @Override
     public void onSweetsItemSelected(String category) {
 
-        /*Fragment fragment = new ContactUsFragment();
+        Fragment fragment = SweetCategoryFragment.getInstance(category);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                 android.R.anim.fade_out);
         fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commitAllowingStateLoss();*/
+        fragmentTransaction.commitAllowingStateLoss();
     }
 }

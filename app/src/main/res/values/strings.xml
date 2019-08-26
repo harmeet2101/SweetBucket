@@ -43,6 +43,12 @@
         <item>Contact Us</item>
         <item>About Us</item>
     </string-array>
+
+    <string-array name="sort_spinner_items">
+        <item>New Arrivals</item>
+        <item>Price low to high</item>
+        <item>Price high to low</item>
+    </string-array>
     <string name="activity_title_about_us">About Us</string>
     <string name="activity_title_contact_us">Contact Us</string>
     <string name="activity_title_popular">Popular</string>

@@ -1,5 +1,6 @@
 package com.sb.sweetbucket.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
+import com.sb.sweetbucket.utils.CommonUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                final ProgressDialog progressDialog = CommonUtils.getProgressBar(RegisterActivity.this);
                 RegisterRequest request = new RegisterRequest(nameEdittext.getText().toString(),
                         mobileEdittext.getText().toString(),passEdiitext.getText().toString(),
                         cPasswordEdittext.getText().toString(),emailEdittext.getText().toString()
@@ -67,7 +70,9 @@ public class RegisterActivity extends AppCompatActivity {
                 registerResponseCall.enqueue(new Callback<RegisterResponse>() {
                     @Override
                     public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-
+                        if(progressDialog!=null && progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
 
                             if(response.code()==200) {
                                 SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
@@ -84,6 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                        if(progressDialog!=null && progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
                         Log.d(RegisterActivity.class.getSimpleName(),t.getMessage());
                     }
                 });

@@ -6,6 +6,7 @@ import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
+import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 
@@ -18,6 +19,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by harmeet on 19-08-2019.
@@ -60,4 +63,11 @@ public interface RestAPIInterface {
     })
     @GET("api/shops")
     Call<List<ShopsResponse>> getShops();
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/sweets/{category}")
+    Call<List<Product>> getSweetsByCategory(@Path("category") String category);
 }
