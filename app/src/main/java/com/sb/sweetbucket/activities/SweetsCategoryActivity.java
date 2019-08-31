@@ -1,22 +1,23 @@
-package com.sb.sweetbucket.fragments;
+package com.sb.sweetbucket.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
-import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.SweetsCategoryRecyclerAdapter;
+import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.utils.comparators.HIghToLowComparator;
@@ -33,58 +34,56 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by harmeet on 25-08-2019.
+ * Created by harmeet on 31-08-2019.
  */
 
-public class SweetCategoryFragment extends Fragment implements Spinner.OnItemSelectedListener {
+public class SweetsCategoryActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener,SweetsCategoryRecyclerAdapter.IOnItemClick {
 
-
-    private static final String TAG = SweetCategoryFragment.class.getSimpleName();
+    private static final String TAG = SweetsCategoryActivity.class.getSimpleName();
     private RecyclerView recyclerView;
-    private TextView tvProductCount;
+    private ImageView backArrowImgview;
+    private TextView tvProductCount,tvCategoryName;
     private Spinner sortSpinner;
     private GridLayoutManager gridLayoutManager;
     private String categoryParams = null;
     private SweetsCategoryRecyclerAdapter recyclerAdapter=null;
     private List<Product> productList;
-    public static SweetCategoryFragment getInstance(String category){
-
-        SweetCategoryFragment sweetCategoryFragment = new SweetCategoryFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putString("category",category);
-        sweetCategoryFragment.setArguments(mBundle);
-        return sweetCategoryFragment;
-    }
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(getArguments()!=null){
-            categoryParams = getArguments().getString("category");
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_sweet_category_frag,container,false);
-        recyclerView = (RecyclerView)view.findViewById(R.id.recylerview);
-        tvProductCount = (TextView)view.findViewById(R.id.tvProductCount);
-        sortSpinner = (Spinner)view.findViewById(R.id.sortSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        setContentView(R.layout.layout_sweet_category_frag);
+        recyclerView = (RecyclerView)findViewById(R.id.recylerview);
+        tvProductCount = (TextView)findViewById(R.id.tvProductCount);
+        tvCategoryName = (TextView)findViewById(R.id.tvCategoryName);
+        sortSpinner = (Spinner)findViewById(R.id.sortSpinner);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        backArrowImgview = (ImageView)findViewById(R.id.backArrow);
+        backArrowImgview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.sort_spinner_items, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         sortSpinner.setAdapter(adapter);
         sortSpinner.setOnItemSelectedListener(this);
-        gridLayoutManager  = new GridLayoutManager(getContext(),2);
+        gridLayoutManager  = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerAdapter = new SweetsCategoryRecyclerAdapter(getContext(),productList,null);
+        recyclerAdapter = new SweetsCategoryRecyclerAdapter(getApplicationContext(),productList,this);
         recyclerView.setAdapter(recyclerAdapter);
-        loadCategoryData(categoryParams);
-        return view;
+
+        Bundle bundle = getIntent().getExtras();
+
+        if(bundle!=null){
+            categoryParams = bundle.getString("category");
+            tvCategoryName.setText(categoryParams);
+            loadCategoryData(categoryParams);
+        }
     }
 
     private void loadCategoryData(String category){
@@ -145,5 +144,15 @@ public class SweetCategoryFragment extends Fragment implements Spinner.OnItemSel
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void OnItemClick(ProductDetails productDetails) {
+
+        Bundle pBundle = new Bundle();
+        pBundle.putSerializable("productDetails",productDetails);
+        Intent pIntent = new Intent(getApplicationContext(),ProductDetailsActivity.class);
+        pIntent.putExtras(pBundle);
+        startActivity(pIntent);
     }
 }

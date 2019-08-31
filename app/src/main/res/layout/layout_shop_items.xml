@@ -1,46 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/mainView"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp"
     android:layout_margin="10dp"
-    android:orientation="vertical"
-    android:background="#f1efef">
-
-
-    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/dummy_img"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:id="@+id/imgview01"/>
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Barfi"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_16"
-        android:layout_below="@id/frame01"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/tvSweetName"/>
+        android:id="@+id/mainView"
+        android:orientation="vertical"
+        android:background="#f1efef">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:textAlignment="textStart"
-        android:singleLine="true"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"
-        android:layout_below="@id/frame01"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/tvSweetAddress"/>
-</LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/dummy_img"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:id="@+id/imgview01"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Barfi"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_16"
+            android:layout_below="@id/frame01"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/tvSweetName"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:textAlignment="textStart"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:layout_below="@id/frame01"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/tvSweetAddress"
+            android:gravity="start" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+
+

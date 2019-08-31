@@ -1,6 +1,7 @@
 package com.sb.sweetbucket.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,8 +22,10 @@ import android.widget.Toast;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.fragments.AboutUsFragment;
+import com.sb.sweetbucket.fragments.BrandsFragment;
 import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
+import com.sb.sweetbucket.fragments.PopularProductsFragment;
 import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.fragments.SweetCategoryFragment;
 import com.sb.sweetbucket.fragments.SweetsFragment;
@@ -103,14 +106,14 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 ShopFragment shopFragment = new ShopFragment();
                 return shopFragment;
             case 3:
-                // notifications fragment
-                HomeFragment homeFragment4 = new HomeFragment();
-                return homeFragment4;
+                // brands fragment
+                BrandsFragment brandsFragment = new BrandsFragment();
+                return brandsFragment;
 
             case 4:
-                // settings fragment
-                HomeFragment homeFragment5 = new HomeFragment();
-                return homeFragment5;
+                // Popular fragment
+                PopularProductsFragment popularProductsFragment = new PopularProductsFragment();
+                return popularProductsFragment;
             case 5:
                 // contactUsFragment fragment
                 ContactUsFragment contactUsFragment = new ContactUsFragment();
@@ -315,15 +318,20 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
         alert.show();
     }
 
-    //TODO add sweetCategory frag here 25-8-19
+    //TODO add sweetCategory frag/activity here 25-8-19
     @Override
     public void onSweetsItemSelected(String category) {
 
-        Fragment fragment = SweetCategoryFragment.getInstance(category);
+        Bundle bundle = new Bundle();
+        bundle.putString("category",category);
+        Intent intent = new Intent(getApplicationContext(),SweetsCategoryActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+/*        Fragment fragment = SweetCategoryFragment.getInstance(category);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                 android.R.anim.fade_out);
         fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.commitAllowingStateLoss();*/
     }
 }

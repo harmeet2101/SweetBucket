@@ -3,12 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/backArrow"
+                android:src="@drawable/baseline_arrow_back_white_24"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/tvCategoryName"
+                android:text="Product Category"
+                android:textSize="@dimen/text_size_16"
+                android:textColor="@android:color/white"
+                android:layout_toRightOf="@+id/backArrow"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:src="@drawable/baseline_shopping_cart_white_24" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="2dp"
+                android:textColor="@android:color/holo_red_dark"
+                android:text="0"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="# Products"
+        android:layout_below="@id/my_toolbar"
         android:singleLine="true"
         android:id="@+id/tvProductCount"
         android:textSize="@dimen/text_size_18"
@@ -21,6 +68,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="36dp"
+        android:layout_below="@id/my_toolbar"
         android:layout_marginTop="20dp"
         android:id="@+id/sortSpinner"
         android:layout_toRightOf="@id/tvProductCount">

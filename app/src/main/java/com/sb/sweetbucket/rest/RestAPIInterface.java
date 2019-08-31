@@ -70,4 +70,11 @@ public interface RestAPIInterface {
     })
     @GET("api/sweets/{category}")
     Call<List<Product>> getSweetsByCategory(@Path("category") String category);
+
+    @GET("api/trandingProducts")
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    Call<List<Product>> getTredingProducts();
 }

@@ -58,7 +58,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             pCodeTextview.setText("Product Code: "+productDetails.getProductCode());
             pCategoryTextview.setText("Product Category: "+productDetails.getCatName());
             pNameTextview.setText(productDetails.getName());
-            dealPriceTextview.setText("Rs "+productDetails.getDealPrice());
+            dealPriceTextview.setText("Rs "+productDetails.getSalePrice());
             discTextview.setText(productDetails.getDiscount()+" Off");
             basePriceTextview.setText("Rs "+productDetails.getBasePrice());
             productInfoTextview.setText(productDetails.getInfo());
