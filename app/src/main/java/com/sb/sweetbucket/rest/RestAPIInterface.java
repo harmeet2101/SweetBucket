@@ -8,6 +8,7 @@ import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
+import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 
 import java.util.ArrayList;
@@ -77,4 +78,11 @@ public interface RestAPIInterface {
             "X-Requested-With: XMLHttpRequest"
     })
     Call<List<Product>> getTredingProducts();
+
+    @GET("api/trandingShops")
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    Call<List<ShopsResponse>> getTredingShops();
 }
