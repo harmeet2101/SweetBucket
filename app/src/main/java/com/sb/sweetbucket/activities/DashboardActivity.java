@@ -107,8 +107,10 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 return shopFragment;
             case 3:
                 // brands fragment
-                BrandsFragment brandsFragment = new BrandsFragment();
-                return brandsFragment;
+                /*BrandsFragment brandsFragment = new BrandsFragment();
+                return brandsFragment;*/
+                HomeFragment homeFragment1 = new HomeFragment();
+                return homeFragment1;
 
             case 4:
                 // Popular fragment

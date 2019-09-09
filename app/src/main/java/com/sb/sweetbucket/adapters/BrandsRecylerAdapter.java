@@ -32,7 +32,9 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int ITEM_TYPE_PRODUCT_ITEM_HEADING = 4;
     public static final int ITEM_TYPE_SHOP_ITEM = 5;
     public static final int ITEM_TYPE_SHOP_ITEM_HEADING = 6;
-
+    private final int PRODUCT_LIMIT = 16;
+    private final int SHOP_LIMIT = 4;
+    private int count =0;
     private Context mContext;
     private List<Product> productResponseList;
     private List<ShopsResponse> shopsResponseList;
@@ -177,7 +179,15 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (productResponseList == null || productResponseList.isEmpty()) {
             return 1;
         } else {
-            return productResponseList.size()+shopsResponseList.size();
+            if(productResponseList.size()>PRODUCT_LIMIT){
+                count = PRODUCT_LIMIT;
+            }else
+                count = productResponseList.size();
+            if(shopsResponseList.size()>SHOP_LIMIT){
+                count = count + SHOP_LIMIT;
+            }else
+                count = shopsResponseList.size();
+            return count/*productResponseList.size()+shopsResponseList.size()*/;
         }
 
     }
