@@ -29,6 +29,7 @@ import com.sb.sweetbucket.fragments.PopularProductsFragment;
 import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.fragments.SweetCategoryFragment;
 import com.sb.sweetbucket.fragments.SweetsFragment;
+import com.sb.sweetbucket.fragments.TestFragment;
 
 /**
  * Created by harmeet on 15-08-2019.
@@ -54,6 +55,7 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
     private static final String TAG_CONTACT_US = "contact_us";
     private static final String TAG_ABOUT_US = "about_us";
     public static String CURRENT_TAG = TAG_HOME;
+    private static final String TAG_ALL_PRODUCTS = "all_products";
     private TextView toolbarTitleTextview;
     // toolbar titles respected to selected nav menu item
     private String[] activityTitles;
@@ -95,8 +97,10 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
         switch (navItemIndex) {
             case 0:
                 // home
-                HomeFragment homeFragment = new HomeFragment();
-                return homeFragment;
+                BrandsFragment brandsFragment = new BrandsFragment();
+                return brandsFragment;
+             //   HomeFragment homeFragment = new HomeFragment();
+             //   return homeFragment;
             case 1:
                 // sweets
                 SweetsFragment sweetsFragment = new SweetsFragment();
@@ -109,7 +113,7 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 // brands fragment
                 /*BrandsFragment brandsFragment = new BrandsFragment();
                 return brandsFragment;*/
-                HomeFragment homeFragment1 = new HomeFragment();
+               TestFragment homeFragment1 = new TestFragment();
                 return homeFragment1;
 
             case 4:
@@ -125,12 +129,18 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 // aboutUsFragment fragment
                 AboutUsFragment aboutUsFragment = new AboutUsFragment();
                 return aboutUsFragment;
+
+            case 7:
+                // all products fragment
+                HomeFragment allProducts = new HomeFragment();
+                return allProducts;
             default:
-                return new HomeFragment();
+                return new TestFragment();
         }
     }
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
+        if(navItemIndex!=7)
         selectNavMenu();
         setToolbarTitle();
 
@@ -335,5 +345,18 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 android.R.anim.fade_out);
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commitAllowingStateLoss();*/
+    }
+
+
+    public void switchToShopFragment(){
+        navItemIndex = 2;
+        CURRENT_TAG = TAG_SHOPS;
+        loadHomeFragment();
+    }
+
+    public void switchToHomeFragment(){
+        navItemIndex = 7;
+        CURRENT_TAG = TAG_ALL_PRODUCTS;
+        loadHomeFragment();
     }
 }

@@ -42,6 +42,7 @@
         <item>Popular</item>
         <item>Contact Us</item>
         <item>About Us</item>
+        <item>All Products</item>
     </string-array>
 
     <string-array name="sort_spinner_items">

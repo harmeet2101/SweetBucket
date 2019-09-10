@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity{
                             progressDialog.dismiss();
                         }
                         // Log.e("resp",response.body().toString());
-                        if(response.body().getApiToken()!=null){
+                        if(response.body()!=null && response.body().getApiToken()!=null){
 
                             SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                             controller.setIsUserLoggedIn(true);

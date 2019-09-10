@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:id="@+id/viewAllTextview"
         android:padding="4dp"
         android:background="@drawable/background_rectangular_edittext"
         android:text="View All >"

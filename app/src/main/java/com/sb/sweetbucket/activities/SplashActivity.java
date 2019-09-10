@@ -39,7 +39,8 @@ public class SplashActivity extends Activity {
                 SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                 if (controller.isUserLoggedIn())
                 {
-                    homeDataStore = HomeDataStore.getInstance();
+                    moveToHomeScreen();
+                    /*homeDataStore = HomeDataStore.getInstance();
                     try {
                         loadTrandingProducts();
                         loadTrandingShops();
@@ -47,7 +48,7 @@ public class SplashActivity extends Activity {
                         e.printStackTrace();
                     }finally {
                         moveToHomeScreen();
-                    }
+                    }*/
                 }else
                 moveToLoginScreen();
             }

@@ -1,14 +1,17 @@
 package com.sb.sweetbucket.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.activities.AllProductsActivity;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Product;
@@ -40,18 +43,16 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<ShopsResponse> shopsResponseList;
     private Map<String,String> vendorNameMap = new HashMap<>();
     private Map<Integer,String> categoryNameMap = new HashMap<>();
-    private BrandsRecylerAdapter.IOnClick iOnClick;
-    public BrandsRecylerAdapter(Context mContext,List<Product> productResponseList,BrandsRecylerAdapter.IOnClick iOnClick) {
-        this.mContext = mContext;
-        this.productResponseList = productResponseList;
-        this.iOnClick = iOnClick;
-    }
+    private BrandsRecylerAdapter.IOnProductClick onProductClick;
+    private BrandsRecylerAdapter.IOnShopClick onShopClick;
+
     public BrandsRecylerAdapter(Context mContext,List<Product> productResponseList,List<ShopsResponse> shopsResponseList,
-                                BrandsRecylerAdapter.IOnClick iOnClick) {
+                                BrandsRecylerAdapter.IOnProductClick onProductClick,BrandsRecylerAdapter.IOnShopClick onShopClick) {
         this.mContext = mContext;
         this.productResponseList = productResponseList;
         this.shopsResponseList = shopsResponseList;
-        this.iOnClick = iOnClick;
+        this.onProductClick  = onProductClick;
+        this.onShopClick = onShopClick;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             case ITEM_TYPE_PRODUCT_ITEM_HEADING: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_heading,
                         parent, false);
-                return new BrandsRecylerAdapter.HeadingDataViewHolder(view);
+                return new BrandsRecylerAdapter.HeadingDataViewHolder(view,1);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home_items,
@@ -86,7 +87,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             case ITEM_TYPE_SHOP_ITEM_HEADING: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_heading,
                         parent, false);
-                return new BrandsRecylerAdapter.HeadingDataViewHolder(view);
+                return new BrandsRecylerAdapter.HeadingDataViewHolder(view,0);
             }
 
         }
@@ -100,21 +101,21 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemViewType(int position) {
         int viewType = 0;
 
-        if (productResponseList == null) {
+        if (productResponseList == null && shopsResponseList==null) {
             viewType = ITEM_TYPE__LOADING_LIST;
-        } else if (productResponseList.isEmpty()) {
+        } else if (productResponseList.isEmpty()&& shopsResponseList.isEmpty()) {
             viewType = ITEM_TYPE__EMPTY_LIST;
         }/*else if(position==0){
             viewType = ITEM_TYPE_PRODUCT_ITEM_HEADING;
         }*/
-        if(position < shopsResponseList.size()){
+        else if(position < shopsResponseList.size()){
             if(shopsResponseList.get(position).getName().equalsIgnoreCase("Heading")){
                 return ITEM_TYPE_SHOP_ITEM_HEADING;
             }else
             return ITEM_TYPE_SHOP_ITEM;
         }
 
-        if(position - shopsResponseList.size() < productResponseList.size()){
+        else if(position - shopsResponseList.size() < productResponseList.size()){
             if(productResponseList.get(position - shopsResponseList.size())
                     .getName().equalsIgnoreCase("Heading")){
             return ITEM_TYPE_PRODUCT_ITEM_HEADING;
@@ -210,12 +211,14 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getProductCode(),product.getName(),
+                    ProductDetails details = new ProductDetails(product.getId(),product.getProductCode(),product.getName(),
                             ""/*categoryNameMap.get(Integer.parseInt(product.getCat1Id()))*/,
                             ""/*vendorNameMap.get(product.getVendorId())*/
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                             product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));
+                    );
+
+                    onProductClick.OnProductClick(details);
                 }
             });
         }
@@ -248,6 +251,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View view) {
 
+                    Toast.makeText(mContext,"Under dev",Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -276,25 +280,64 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    private class HeadingDataViewHolder extends RecyclerView.ViewHolder {
+    private class HeadingDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mNameTextview;
-        public HeadingDataViewHolder(View view) {
+        private TextView mNameTextview,viewAllTextview;
+        private int id;
+        public HeadingDataViewHolder(View view,int id) {
             super(view);
+            this.id = id;
+            viewAllTextview = (TextView)view.findViewById(R.id.viewAllTextview);
             mNameTextview = (TextView)view.findViewById(R.id.tvHeading);
+            viewAllTextview.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            switch (this.id){
+                case 0:
+                    onShopClick.OnShopClick();
+                    break;
+                case 1:
+                    onProductClick.onAllProductClickEvent();
+                    /*Intent intent = new Intent(mContext,AllProductsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);*/
+                    break;
+            }
         }
 
         public void update(String txt){
 
             mNameTextview.setText(txt);
         }
+
     }
 
-    public interface IOnClick{
-        void testOnClick(ProductDetails productDetails);
+    public interface IOnProductClick{
+        void OnProductClick(ProductDetails productDetails);
+        void onAllProductClickEvent();
+    }
+
+    public interface IOnShopClick{
+        void OnShopClick();
     }
     public void updateDataSource(List<Product> productList){
         this.productResponseList = productList;
+        notifyDataSetChanged();
+
+        /*for(Product product:productList){
+            vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
+        }
+        for(Category category:homeResponse.getCategory()){
+            categoryNameMap.put(category.getId(),category.getName());
+        }*/
+    }
+
+    public void updateDataSource(List<Product> productList,List<ShopsResponse> shopsResponseList){
+        this.productResponseList = productList;
+        this.shopsResponseList = shopsResponseList;
         notifyDataSetChanged();
 
         /*for(Product product:productList){
