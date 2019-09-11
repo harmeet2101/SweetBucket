@@ -12,6 +12,7 @@ public class ProductDetails implements Serializable
     private String productCode;
     private String name;
     private String catName;
+    private String catId;
     private String vendorName;
     private String info;
     private String tags;
@@ -23,10 +24,11 @@ public class ProductDetails implements Serializable
     private String unit;
     private String stockQty;
 
-    public ProductDetails(Integer id, String productCode, String name, String catName,
+    public ProductDetails(Integer id, String catId,String productCode, String name, String catName,
                           String vendorName, String info, String tags, String imageUrl,
                           String basePrice, String dealPrice, String salePrice, String discount, String unit, String stockQty) {
         this.id = id;
+        this.catId = catId;
         this.productCode = productCode;
         this.name = name;
         this.catName = catName;
@@ -41,6 +43,11 @@ public class ProductDetails implements Serializable
         this.unit = unit;
         this.stockQty = stockQty;
     }
+
+    public String getCatId() {
+        return catId;
+    }
+
 
     public Integer getId() {
         return id;

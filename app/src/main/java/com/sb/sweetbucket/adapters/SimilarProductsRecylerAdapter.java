@@ -12,31 +12,36 @@ import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
+import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.Shop;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by harmeet on 26-08-2019.
+ * Created by harmeet on 12-09-2019.
  */
 
-public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SimilarProductsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
-    private final String TAG = SweetsCategoryRecyclerAdapter.class.getSimpleName();
+    private final String TAG = SimilarProductsRecylerAdapter.class.getSimpleName();
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
 
+
     private Context mContext;
     private List<Product> responseList;
-    private IOnItemClick iOnItemClick;
-
-    public SweetsCategoryRecyclerAdapter(Context mContext, List<Product> responseList, IOnItemClick iOnItemClick) {
+    private Map<String,String> vendorNameMap = new HashMap<>();
+    private Map<Integer,String> categoryNameMap = new HashMap<>();
+    private SimilarProductsRecylerAdapter.IOnClick iOnClick;
+    public SimilarProductsRecylerAdapter(Context mContext,List<Product> responseList,SimilarProductsRecylerAdapter.IOnClick iOnClick) {
         this.mContext = mContext;
         this.responseList = responseList;
-        this.iOnItemClick = iOnItemClick;
+        this.iOnClick = iOnClick;
     }
 
     @Override
@@ -46,17 +51,17 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
             case ITEM_TYPE__LOADING_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading,
                         parent, false);
-                return new SweetsCategoryRecyclerAdapter.LoadingDataViewHolder(view);
+                return new SimilarProductsRecylerAdapter.LoadingDataViewHolder(view);
             }
             case ITEM_TYPE__EMPTY_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_empty_list,
                         parent, false);
-                return new SweetsCategoryRecyclerAdapter.EmptyDataViewHolder(view);
+                return new SimilarProductsRecylerAdapter.EmptyDataViewHolder(view);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
-                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_home_items,
+                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_similar_items,
                         parent, false);
-                return new SweetsCategoryRecyclerAdapter.ProductDataViewHolder(view3);
+                return new SimilarProductsRecylerAdapter.ProductDataViewHolder(view3);
             }
         }
 
@@ -64,7 +69,6 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
         return null;
 
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -80,7 +84,6 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
         return viewType;
     }
 
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -89,15 +92,19 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
             case ITEM_TYPE__LOADING_LIST:
                 break;
             case ITEM_TYPE__EMPTY_LIST:
+                SimilarProductsRecylerAdapter.EmptyDataViewHolder emptyDataViewHolder = (SimilarProductsRecylerAdapter.EmptyDataViewHolder) holder;
                 break;
             case ITEM_TYPE_PRODUCT_ITEM:
                 bindProductViewHolder(holder,responseList.get(position));
                 break;
         }
+
+
     }
 
+
     private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Product product){
-        SweetsCategoryRecyclerAdapter.ProductDataViewHolder dataViewHolder = (SweetsCategoryRecyclerAdapter.ProductDataViewHolder)holder;
+        SimilarProductsRecylerAdapter.ProductDataViewHolder dataViewHolder = (SimilarProductsRecylerAdapter.ProductDataViewHolder)holder;
         dataViewHolder.updateView(product);
     }
     @Override
@@ -109,7 +116,6 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
         }
 
     }
-
 
     private class ProductDataViewHolder extends RecyclerView.ViewHolder {
         private ViewGroup mainView;
@@ -129,18 +135,16 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnItemClick.OnItemClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
-                            ""/*categoryNameMap.get(Integer.parseInt(product.getCat1Id()))*/,
-                            ""/*vendorNameMap.get(product.getVendorId())*/
+                   /* iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                            categoryNameMap.get(Integer.parseInt(product.getCat1Id())),vendorNameMap.get(product.getVendorId())
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                             product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));
+                    ));*/
                 }
             });
         }
 
         public void updateView(Product product){
-
             this.product = product;
             tvSweetName.setText(product.getName());
             salePriceTextview.setText("Rs "+product.getSalePrice());
@@ -148,6 +152,8 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
             discountTextview.setText(product.getDiscount()+" Off");
             Picasso.with(mContext).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);
+//            vendorTextview.setText(vendorNameMap.get(product.getVendorId()));
+
         }
     }
 
@@ -163,13 +169,18 @@ public class SweetsCategoryRecyclerAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-
-    public void updateDataSource(List<Product> products){
-        this.responseList =products;
-        notifyDataSetChanged();
+    public interface IOnClick{
+        void testOnClick(ProductDetails productDetails);
     }
+    public void updateDataSource(List<Product> productList){
+        this.responseList = productList;
+        notifyDataSetChanged();
 
-    public interface IOnItemClick{
-        void OnItemClick(ProductDetails productDetails);
+       /* for(Shop shop:homeResponse.getShops()){
+            vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
+        }
+        for(Category category:homeResponse.getCategory()){
+            categoryNameMap.put(category.getId(),category.getName());
+        }*/
     }
 }

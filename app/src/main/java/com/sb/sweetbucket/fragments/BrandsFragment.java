@@ -158,6 +158,7 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
 
     private List<Product> productList = null;
     private List<ShopsResponse> shopsproductResponseList = null;
+    private List<Category> categoryList;
     private HomeDataStore homeDataStore = null;
     private void loadTrandingProducts(){
 
@@ -171,7 +172,7 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
                                      productList = response.body();
                                      Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                                      updateHomeDataStore(productList);
-                                     recyclerAdapter.updateDataSource(productList,homeDataStore.getShopsproductResponseList());
+                                     recyclerAdapter.updateDataSource(productList,homeDataStore.getShopsproductResponseList(),categoryList);
                                  }
 
                                  @Override
@@ -199,7 +200,8 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
                 if(response.code()==200) {
                     shopsproductResponseList = response.body();
                     updateHomeDataStore(shopsproductResponseList);
-                    loadTrandingProducts();
+                    loadCategoryData();
+
                 }
             }
 
@@ -216,6 +218,32 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
         });
     }
 
+    private void loadCategoryData(){
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        Call<List<Category>> responseCall = apiInterface.getCategory();
+        responseCall.enqueue(new Callback<List<Category>>() {
+
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+
+
+                updateHomeDataStore(response.body());
+                categoryList = response.body();
+                loadTrandingProducts();
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.e(TAG,t.getMessage());
+                categoryList = new ArrayList<>();
+                updateHomeDataStore(categoryList);
+            }
+
+            void updateHomeDataStore(List<Category> categoryList){
+                homeDataStore.setCategoryList(categoryList);
+            }
+        });
+    }
 
     private void loadSuggestionData(String suggestion){
 

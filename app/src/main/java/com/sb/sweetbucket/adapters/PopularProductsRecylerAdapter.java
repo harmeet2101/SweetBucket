@@ -135,7 +135,7 @@ public class PopularProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getProductCode(),product.getName(),
+                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
                             ""/*categoryNameMap.get(Integer.parseInt(product.getCat1Id()))*/,
                             ""/*vendorNameMap.get(product.getVendorId())*/
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),

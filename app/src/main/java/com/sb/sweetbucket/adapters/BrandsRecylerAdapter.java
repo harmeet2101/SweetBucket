@@ -14,7 +14,9 @@ import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.activities.AllProductsActivity;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
+import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +47,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Map<Integer,String> categoryNameMap = new HashMap<>();
     private BrandsRecylerAdapter.IOnProductClick onProductClick;
     private BrandsRecylerAdapter.IOnShopClick onShopClick;
+    private List<Category> categoryList;
 
     public BrandsRecylerAdapter(Context mContext,List<Product> productResponseList,List<ShopsResponse> shopsResponseList,
                                 BrandsRecylerAdapter.IOnProductClick onProductClick,BrandsRecylerAdapter.IOnShopClick onShopClick) {
@@ -211,9 +214,9 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ProductDetails details = new ProductDetails(product.getId(),product.getProductCode(),product.getName(),
-                            ""/*categoryNameMap.get(Integer.parseInt(product.getCat1Id()))*/,
-                            ""/*vendorNameMap.get(product.getVendorId())*/
+                    ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                            categoryNameMap.get(Integer.parseInt(product.getCat1Id())),
+                            vendorNameMap.get(product.getVendorId())
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                             product.getDiscount(),product.getUnit(),product.getStockQty()
                     );
@@ -323,28 +326,19 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public interface IOnShopClick{
         void OnShopClick();
     }
-    public void updateDataSource(List<Product> productList){
-        this.productResponseList = productList;
-        notifyDataSetChanged();
-
-        /*for(Product product:productList){
-            vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
-        }
-        for(Category category:homeResponse.getCategory()){
-            categoryNameMap.put(category.getId(),category.getName());
-        }*/
-    }
-
-    public void updateDataSource(List<Product> productList,List<ShopsResponse> shopsResponseList){
+    public void updateDataSource(List<Product> productList, List<ShopsResponse> shopsResponseList, List<Category> categoryList){
         this.productResponseList = productList;
         this.shopsResponseList = shopsResponseList;
-        notifyDataSetChanged();
+        this.categoryList = categoryList;
 
-        /*for(Product product:productList){
-            vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
+
+        for(ShopsResponse shop:shopsResponseList){
+            if(shop.getVendorDetails()!=null)
+            vendorNameMap.put(shop.getVendorDetails().getVendorId(),shop.getVendorDetails().getStoreName());
         }
-        for(Category category:homeResponse.getCategory()){
+        for(Category category:categoryList){
             categoryNameMap.put(category.getId(),category.getName());
-        }*/
+        }
+        notifyDataSetChanged();
     }
 }

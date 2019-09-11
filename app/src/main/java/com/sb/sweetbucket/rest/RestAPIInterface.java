@@ -85,4 +85,7 @@ public interface RestAPIInterface {
             "X-Requested-With: XMLHttpRequest"
     })
     Call<List<ShopsResponse>> getTredingShops();
+
+    @GET("api/similarproducts/{cat-id}")
+    Call<List<Product>> getSimilarProductsByCategory(@Path("cat-id") String category);
 }
