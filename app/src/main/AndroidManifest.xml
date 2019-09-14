@@ -38,6 +38,8 @@
         <activity android:name=".activities.SweetsCategoryActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activities.AllProductsActivity" android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden"/>
+
+        <activity android:name=".activities.ShopDetailActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

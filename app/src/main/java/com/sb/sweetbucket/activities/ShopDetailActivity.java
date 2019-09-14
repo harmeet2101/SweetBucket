@@ -14,13 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.adapters.SweetsCategoryRecyclerAdapter;
 import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAPIInterface;
+import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.VendorResponse;
 import com.sb.sweetbucket.utils.comparators.HIghToLowComparator;
 import com.sb.sweetbucket.utils.comparators.LowToHighComparator;
 import com.sb.sweetbucket.utils.comparators.SortByDateComparator;
@@ -35,24 +38,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by harmeet on 31-08-2019.
+ * Created by harmeet on 14-09-2019.
  */
 
-public class SweetsCategoryActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener,SweetsCategoryRecyclerAdapter.IOnItemClick {
+public class ShopDetailActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener,SweetsCategoryRecyclerAdapter.IOnItemClick{
 
-    private static final String TAG = SweetsCategoryActivity.class.getSimpleName();
+
+    private static final String TAG = ShopDetailActivity.class.getSimpleName();
     private RecyclerView recyclerView;
     private ImageView backArrowImgview;
     private TextView tvProductCount,tvCategoryName;
     private Spinner sortSpinner;
     private GridLayoutManager gridLayoutManager;
-    private String categoryParams = null;
-    private SweetsCategoryRecyclerAdapter recyclerAdapter=null;
+    private String vendorID = null;
+    private String vendorName = null;
     private List<Product> productList;
+    private SweetsCategoryRecyclerAdapter recyclerAdapter=null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_sweet_category_frag);
+        setContentView(R.layout.layout_shop_detail);
         recyclerView = (RecyclerView)findViewById(R.id.recylerview);
         tvProductCount = (TextView)findViewById(R.id.tvProductCount);
         tvCategoryName = (TextView)findViewById(R.id.tvCategoryName);
@@ -77,43 +82,16 @@ public class SweetsCategoryActivity extends AppCompatActivity implements Spinner
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerAdapter = new SweetsCategoryRecyclerAdapter(getApplicationContext(),productList,this);
         recyclerView.setAdapter(recyclerAdapter);
-
         Bundle bundle = getIntent().getExtras();
 
         if(bundle!=null){
-            categoryParams = bundle.getString("category");
-            tvCategoryName.setText(categoryParams);
-            loadCategoryData(categoryParams);
+            vendorID = bundle.getString("vendorID");
+            vendorName = bundle.getString("vendorName");
+            tvCategoryName.setText(vendorName);
+            loadProductsByVendorID(vendorID);
         }
     }
 
-    private void loadCategoryData(String category){
-        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
-        Call<List<Product>> responseCall = apiInterface.getSweetsByCategory(category);
-        responseCall.enqueue(new Callback<List<Product>>() {
-
-            @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-
-                productList = response.body();
-                if(productList.size()==0){
-                    tvProductCount.setText(productList.size()+" Product");
-                }
-                else if(productList.size()>0){
-                    tvProductCount.setText(productList.size()+" Products");
-                }
-                Log.e("resp",response.body().toString());
-                Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                recyclerAdapter.updateDataSource(productList, HomeDataStore.getInstance().getCategoryList());
-            }
-
-            @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                Log.e(TAG,t.getMessage());
-                recyclerAdapter.updateDataSource(new ArrayList<Product>(),null);
-            }
-        });
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -124,7 +102,7 @@ public class SweetsCategoryActivity extends AppCompatActivity implements Spinner
             case 0:
                 if (productList!=null){
                     Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                    recyclerAdapter.updateDataSource(productList,HomeDataStore.getInstance().getCategoryList());
+                    recyclerAdapter.updateDataSource(productList, HomeDataStore.getInstance().getCategoryList());
                 }
                 break;
             case 1:
@@ -147,9 +125,41 @@ public class SweetsCategoryActivity extends AppCompatActivity implements Spinner
 
     }
 
+    private void loadProductsByVendorID(String vendorId){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        Call<VendorResponse> responseCall = apiInterface.getProductsByShopID(vendorId);
+        responseCall.enqueue(new Callback<VendorResponse>() {
+
+            @Override
+            public void onResponse(Call<VendorResponse> call, Response<VendorResponse> response) {
+
+                if(response.code()==200) {
+
+                    productList = response.body().getProductList();
+                    if(productList.size()==0){
+                        tvProductCount.setText(productList.size()+" Product");
+                    }
+                    else if(productList.size()>0){
+                        tvProductCount.setText(productList.size()+" Products");
+                    }
+                    Log.e(TAG,response.body().getProductList().toString());
+                    Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                    recyclerAdapter.updateDataSource(response.body().getProductList(),HomeDataStore.getInstance().getCategoryList());
+                }
+                else Toast.makeText(getApplicationContext(),"Error ocurred",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<VendorResponse> call, Throwable t) {
+                Log.e(TAG,t.getMessage());
+                recyclerAdapter.updateDataSource(new ArrayList<Product>(),null);
+            }
+        });
+    }
+
     @Override
     public void OnItemClick(ProductDetails productDetails) {
-
         Bundle pBundle = new Bundle();
         pBundle.putSerializable("productDetails",productDetails);
         Intent pIntent = new Intent(getApplicationContext(),ProductDetailsActivity.class);

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.activities.DashboardActivity;
 import com.sb.sweetbucket.activities.ProductDetailsActivity;
+import com.sb.sweetbucket.activities.ShopDetailActivity;
 import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.BrandsRecylerAdapter;
 import com.sb.sweetbucket.adapters.PopularProductsRecylerAdapter;
@@ -146,6 +147,16 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
     }
 
     @Override
+    public void onShopSelected(String vendorID,String vendorName) {
+        Bundle bundle  = new Bundle();
+        bundle.putString("vendorName",vendorName);
+        bundle.putString("vendorID",vendorID);
+        Intent intent = new Intent(getContext(),ShopDetailActivity.class);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
+    }
+
+    @Override
     public void onAllProductClickEvent() {
         dashboardActivity.switchToHomeFragment();
     }
@@ -172,7 +183,7 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
                                      productList = response.body();
                                      Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                                      updateHomeDataStore(productList);
-                                     recyclerAdapter.updateDataSource(productList,homeDataStore.getShopsproductResponseList(),categoryList);
+                                     recyclerAdapter.updateDataSource(productList,shopsproductResponseList,categoryList);
                                  }
 
                                  @Override
@@ -258,6 +269,7 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
                 //updateData(response.body());
 
                 // updating search view data in its corresponding adapter
+                HomeDataStore.getInstance().setAllShopList(response.body().getShops());
                 for(Category c:response.body().getCategory()){
                     searchList.add(c.getName());
                 }

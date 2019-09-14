@@ -76,4 +76,5 @@ If you’re looking for something new, you’re in the right place. We strive to
 We started as a small business in Varanasi [Kashi Vishwanath],in the northern Indian state of Uttar Pradesh in 2019, and our aim is to continue providing our customers with products that keep them happy, at prices that keep them happy.
     </string>
     <string name="app_close_dialog_message">Do you want to logout?</string>
+    <string name="app_exit_dialog_message">Do you want to Exit?</string>
 </resources>

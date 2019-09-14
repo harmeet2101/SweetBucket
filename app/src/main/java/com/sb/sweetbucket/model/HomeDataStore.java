@@ -2,6 +2,7 @@ package com.sb.sweetbucket.model;
 
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 
 import java.util.List;
@@ -15,6 +16,16 @@ public class HomeDataStore {
     private List<ShopsResponse> shopsproductResponseList;
     private List<Product> productList;
     private List<Category> categoryList;
+
+    public List<Shop> getAllShopList() {
+        return allShopList;
+    }
+
+    public void setAllShopList(List<Shop> allShopList) {
+        this.allShopList = allShopList;
+    }
+
+    private List<Shop> allShopList;
     private static HomeDataStore instance = null;
 
 

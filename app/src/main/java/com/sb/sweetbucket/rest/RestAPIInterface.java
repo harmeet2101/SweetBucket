@@ -10,6 +10,7 @@ import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
+import com.sb.sweetbucket.rest.response.VendorResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,14 @@ public interface RestAPIInterface {
     })
     @GET("api/shops")
     Call<List<ShopsResponse>> getShops();
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/shops/{vendor_id}")
+    Call<VendorResponse> getProductsByShopID(@Path(value = "vendor_id",encoded = true) String vendorID);
 
     @Headers({
             "Content-Type: application/json",

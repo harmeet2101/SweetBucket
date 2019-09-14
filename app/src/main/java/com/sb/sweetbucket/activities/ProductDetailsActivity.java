@@ -34,7 +34,7 @@ import retrofit2.Response;
  * Created by harmeet on 18-08-2019.
  */
 
-    public class ProductDetailsActivity extends AppCompatActivity implements View.OnClickListener{
+    public class ProductDetailsActivity extends AppCompatActivity implements View.OnClickListener,SimilarProductsRecylerAdapter.IOnClick{
     private static final String TAG = ProductDetailsActivity.class.getSimpleName();
     private ImageView backArrowImgview;
     private TextView pCodeTextview,pCategoryTextview,pNameTextview,discTextview,basePriceTextview,dealPriceTextview;
@@ -74,7 +74,7 @@ import retrofit2.Response;
         mRecylerView = (RecyclerView)findViewById(R.id.similarRecylerview);
         layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         mRecylerView.setLayoutManager(layoutManager);
-        recylerAdapter = new SimilarProductsRecylerAdapter(getApplicationContext(),productList,null);
+        recylerAdapter = new SimilarProductsRecylerAdapter(getApplicationContext(),productList,this);
         mRecylerView.setAdapter(recylerAdapter);
         mRecylerView.setNestedScrollingEnabled(false);
         setUpData();
@@ -133,5 +133,15 @@ import retrofit2.Response;
 
                              }
         );
+    }
+
+    @Override
+    public void testOnClick(ProductDetails productDetails) {
+
+        Bundle pBundle = new Bundle();
+        pBundle.putSerializable("productDetails",productDetails);
+        Intent pIntent = new Intent(getApplicationContext(),ProductDetailsActivity.class);
+        pIntent.putExtras(pBundle);
+        startActivity(pIntent);
     }
 }

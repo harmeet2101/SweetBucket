@@ -18,6 +18,7 @@ import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
+import com.sb.sweetbucket.utils.CommonUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -43,11 +44,11 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context mContext;
     private List<Product> productResponseList;
     private List<ShopsResponse> shopsResponseList;
-    private Map<String,String> vendorNameMap = new HashMap<>();
-    private Map<Integer,String> categoryNameMap = new HashMap<>();
     private BrandsRecylerAdapter.IOnProductClick onProductClick;
     private BrandsRecylerAdapter.IOnShopClick onShopClick;
     private List<Category> categoryList;
+    private Map<String,String> vendorNameMap = new HashMap<>();
+    private Map<Integer,String> categoryNameMap = new HashMap<>();
 
     public BrandsRecylerAdapter(Context mContext,List<Product> productResponseList,List<ShopsResponse> shopsResponseList,
                                 BrandsRecylerAdapter.IOnProductClick onProductClick,BrandsRecylerAdapter.IOnShopClick onShopClick) {
@@ -254,7 +255,8 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View view) {
 
-                    Toast.makeText(mContext,"Under dev",Toast.LENGTH_SHORT).show();
+                    String id = CommonUtils.getBase64EncodeString(shopsResponse.getVendorDetails().getVendorId());
+                    onShopClick.onShopSelected(id,shopsResponse.getVendorDetails().getStoreName());
                 }
             });
         }
@@ -325,6 +327,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public interface IOnShopClick{
         void OnShopClick();
+        void onShopSelected(String vendorID,String vendorName);
     }
     public void updateDataSource(List<Product> productList, List<ShopsResponse> shopsResponseList, List<Category> categoryList){
         this.productResponseList = productList;

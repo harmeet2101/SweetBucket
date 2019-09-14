@@ -1,5 +1,6 @@
 package com.sb.sweetbucket.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,12 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.activities.ShopDetailActivity;
 import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.ShopRecylerAdapter;
 import com.sb.sweetbucket.adapters.SweetsRecylerAdapter;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
+import com.sb.sweetbucket.rest.response.VendorResponse;
+import com.sb.sweetbucket.utils.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +36,7 @@ import retrofit2.Response;
  * Created by harmeet on 24-08-2019.
  */
 
-public class ShopFragment extends Fragment {
+public class ShopFragment extends Fragment implements ShopRecylerAdapter.IShopRecylerListener {
 
     private static final String TAG = ShopFragment.class.getSimpleName();
     private RecyclerView recyclerView;
@@ -48,7 +53,7 @@ public class ShopFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.recylerview);
         gridLayoutManager  = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recylerAdapter = new ShopRecylerAdapter(getContext(),shopsResponseList);
+        recylerAdapter = new ShopRecylerAdapter(getContext(),shopsResponseList,this);
         recyclerView.setAdapter(recylerAdapter);
         loadShopData();
         return view;
@@ -76,5 +81,18 @@ public class ShopFragment extends Fragment {
                 recylerAdapter.updateDataSource(new ArrayList<ShopsResponse>());
             }
         });
+    }
+
+
+
+    @Override
+    public void getProductListByShopID(String vendorID,String vendorName) {
+
+        Bundle bundle  = new Bundle();
+        bundle.putString("vendorName",vendorName);
+        bundle.putString("vendorID",vendorID);
+        Intent intent = new Intent(getContext(),ShopDetailActivity.class);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
     }
 }

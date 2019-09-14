@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.Shop;
+import com.sb.sweetbucket.rest.response.ShopsResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -135,11 +137,11 @@ public class SimilarProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   /* iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
                             categoryNameMap.get(Integer.parseInt(product.getCat1Id())),vendorNameMap.get(product.getVendorId())
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                             product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));*/
+                    ));
                 }
             });
         }
@@ -152,7 +154,7 @@ public class SimilarProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
             discountTextview.setText(product.getDiscount()+" Off");
             Picasso.with(mContext).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);
-//            vendorTextview.setText(vendorNameMap.get(product.getVendorId()));
+            vendorTextview.setText(vendorNameMap.get(product.getVendorId()));
 
         }
     }
@@ -176,11 +178,12 @@ public class SimilarProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
         this.responseList = productList;
         notifyDataSetChanged();
 
-       /* for(Shop shop:homeResponse.getShops()){
+        for(Shop shop: HomeDataStore.getInstance().getAllShopList()){
+            if(shop.getVendorId()!=null)
             vendorNameMap.put(shop.getVendorId(),shop.getStoreName());
         }
-        for(Category category:homeResponse.getCategory()){
+        for(Category category:HomeDataStore.getInstance().getCategoryList()){
             categoryNameMap.put(category.getId(),category.getName());
-        }*/
+        }
     }
 }

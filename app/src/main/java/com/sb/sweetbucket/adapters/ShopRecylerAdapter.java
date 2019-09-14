@@ -2,6 +2,7 @@ package com.sb.sweetbucket.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
+import com.sb.sweetbucket.utils.CommonUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,9 +32,11 @@ public class ShopRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
     private Context mContext;
     private List<ShopsResponse> responseList;
-    public ShopRecylerAdapter(Context mContext,List<ShopsResponse> responseList) {
+    private IShopRecylerListener shopRecylerListener;
+    public ShopRecylerAdapter(Context mContext, List<ShopsResponse> responseList, ShopFragment shopFragment) {
         this.mContext = mContext;
         this.responseList = responseList;
+        this.shopRecylerListener = (IShopRecylerListener)shopFragment;
     }
 
     @Override
@@ -121,6 +126,10 @@ public class ShopRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
 
+
+                    String id = CommonUtils.getBase64EncodeString(shopsResponse.getVendorDetails().getVendorId());
+                    Log.e(TAG,id);
+                    shopRecylerListener.getProductListByShopID(id,shopsResponse.getVendorDetails().getStoreName());
                 }
             });
         }
@@ -152,5 +161,10 @@ public class ShopRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void updateDataSource(List<ShopsResponse> shopsResponseList){
         this.responseList =shopsResponseList;
         notifyDataSetChanged();
+    }
+
+
+    public interface IShopRecylerListener{
+        void getProductListByShopID(String vendorID,String vendorName);
     }
 }

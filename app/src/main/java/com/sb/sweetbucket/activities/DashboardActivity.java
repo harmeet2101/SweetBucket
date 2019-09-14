@@ -299,8 +299,11 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 loadHomeFragment();
                 return;
             }
+        }if(getFragmentManager().getBackStackEntryCount()==0){
+
+            showExitAlertDialog();
         }
-        super.onBackPressed();
+       else super.onBackPressed();
     }
 
     private void showLogoutAlertDialog(){
@@ -314,6 +317,31 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                     public void onClick(DialogInterface dialog, int id) {
                         SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                         controller.setIsUserLoggedIn(false);
+                        dialog.cancel();
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Action for 'NO' Button
+                        dialog.cancel();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void showExitAlertDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.app_exit_dialog_message).setTitle(R.string.app_name);
+
+        //Setting message manually and performing action on button click
+        builder.setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         finish();
 
@@ -346,7 +374,6 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commitAllowingStateLoss();*/
     }
-
 
     public void switchToShopFragment(){
         navItemIndex = 2;

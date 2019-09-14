@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.SweetsCategoryRecyclerAdapter;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.utils.comparators.HIghToLowComparator;
@@ -104,13 +105,13 @@ public class SweetCategoryFragment extends Fragment implements Spinner.OnItemSel
                 }
                 Log.e("resp",response.body().toString());
                 Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                recyclerAdapter.updateDataSource(productList);
+                recyclerAdapter.updateDataSource(productList, HomeDataStore.getInstance().getCategoryList());
             }
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Log.e(TAG,t.getMessage());
-                recyclerAdapter.updateDataSource(new ArrayList<Product>());
+                recyclerAdapter.updateDataSource(new ArrayList<Product>(),null);
             }
         });
     }
@@ -124,19 +125,19 @@ public class SweetCategoryFragment extends Fragment implements Spinner.OnItemSel
             case 0:
                 if (productList!=null){
                     Collections.sort(productList,new SortByDateComparator( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                    recyclerAdapter.updateDataSource(productList);
+                    recyclerAdapter.updateDataSource(productList,HomeDataStore.getInstance().getCategoryList());
                 }
                 break;
             case 1:
                 if(productList!=null){
                     Collections.sort(productList,new LowToHighComparator());
-                    recyclerAdapter.updateDataSource(productList);
+                    recyclerAdapter.updateDataSource(productList,HomeDataStore.getInstance().getCategoryList());
                 }
                 break;
             case 2:
                 if(productList!=null){
                     Collections.sort(productList,new HIghToLowComparator());
-                    recyclerAdapter.updateDataSource(productList);
+                    recyclerAdapter.updateDataSource(productList,HomeDataStore.getInstance().getCategoryList());
                 }
                 break;
         }
