@@ -191,7 +191,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             if(shopsResponseList.size()>SHOP_LIMIT){
                 count = count + SHOP_LIMIT;
             }else
-                count = shopsResponseList.size();
+                count = count + shopsResponseList.size();
             return count/*productResponseList.size()+shopsResponseList.size()*/;
         }
 

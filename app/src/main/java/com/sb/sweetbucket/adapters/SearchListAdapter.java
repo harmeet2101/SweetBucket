@@ -10,8 +10,13 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.model.Search;
+import com.sb.sweetbucket.rest.response.Category;
+import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.Shop;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harmeet on 31-08-2019.
@@ -21,13 +26,13 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
 
 
     private SearchFilter searchFilter;
-    private ArrayList<String> searchList;
-    private ArrayList<String> filterdSearchList;
+    private ArrayList<Search> mSearchList;
+    private ArrayList<Search> mSearchFilteredList;
     private Context mContext;
-    public SearchListAdapter(Context mContext,ArrayList<String> searchList) {
+    public SearchListAdapter(Context mContext,ArrayList<Search> mSearchList) {
         this.mContext = mContext;
-        this.searchList = searchList;
-        this.filterdSearchList = searchList;
+        this.mSearchList = mSearchList;
+        this.mSearchFilteredList = mSearchList;
         getFilter();
     }
 
@@ -37,7 +42,8 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
      */
     @Override
     public int getCount() {
-        return filterdSearchList.size();
+
+        return mSearchFilteredList.size();
     }
 
     /**
@@ -47,7 +53,7 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
      */
     @Override
     public Object getItem(int i) {
-        return filterdSearchList.get(i);
+        return mSearchFilteredList.get(i);
     }
 
     /**
@@ -72,7 +78,8 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
         // A ViewHolder keeps references to children views to avoid unnecessary calls
         // to findViewById() on each row.
         final ViewHolder holder;
-        final String nameString = (String) getItem(position);
+        final Search mSearch = (Search)getItem(position);
+        final String nameString = mSearch.getName();
 
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.
@@ -119,20 +126,19 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
             if (constraint!=null && constraint.length()>0) {
-                ArrayList<String> tempList = new ArrayList<String>();
+                ArrayList<Search> tempList = new ArrayList<>();
 
-                // search content in friend list
-                for (String nameString : searchList) {
-                    if (nameString.toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        tempList.add(nameString);
+                for (Search search: mSearchList) {
+                    if (search.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(search);
                     }
                 }
 
                 filterResults.count = tempList.size();
                 filterResults.values = tempList;
             } else {
-                filterResults.count = searchList.size();
-                filterResults.values = searchList;
+                filterResults.count = mSearchList.size();
+                filterResults.values = mSearchList;
             }
 
             return filterResults;
@@ -146,13 +152,14 @@ public class SearchListAdapter extends BaseAdapter implements Filterable {
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filterdSearchList = (ArrayList<String>) results.values;
+            mSearchFilteredList = (ArrayList<Search>) results.values;
             notifyDataSetChanged();
         }
     }
 
-    public  void  updateDataSource(ArrayList<String> searchList){
-        this.searchList = searchList;
+    public  void  updateDataSource(ArrayList<Search> searchList){
+        this.mSearchList = searchList;
+        this.mSearchFilteredList = mSearchList;
         notifyDataSetChanged();
     }
 }

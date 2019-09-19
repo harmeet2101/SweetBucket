@@ -40,6 +40,8 @@
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden"/>
 
         <activity android:name=".activities.ShopDetailActivity" android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.TestActivity"/>
     </application>
 
 </manifest>

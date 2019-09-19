@@ -5,7 +5,9 @@ import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by harmeet on 01-09-2019.
@@ -17,12 +19,35 @@ public class HomeDataStore {
     private List<Product> productList;
     private List<Category> categoryList;
 
+    public Map<String, Shop> getShopsResponseMap() {
+        return shopsResponseMap;
+    }
+
+    public void setShopsResponseMap(Map<String, Shop> shopsResponseMap) {
+        this.shopsResponseMap = shopsResponseMap;
+    }
+
+    private Map<String,Shop> shopsResponseMap = new LinkedHashMap<>();
+
+    public Map<String, Product> getProductMap() {
+        return productMap;
+    }
+
+    public void setProductMap(Map<String, Product> productMap) {
+        this.productMap = productMap;
+    }
+
+    private Map<String,Product> productMap = new LinkedHashMap<>();
     public List<Shop> getAllShopList() {
         return allShopList;
     }
 
     public void setAllShopList(List<Shop> allShopList) {
         this.allShopList = allShopList;
+        for (int i=0;i<allShopList.size();i++){
+            shopsResponseMap.put(allShopList.get(i).getStoreName(),
+                    allShopList.get(i));
+        }
     }
 
     private List<Shop> allShopList;
@@ -61,6 +86,10 @@ public class HomeDataStore {
             Product heading = new Product();
             heading.setName("Heading");
             this.productList.add(0,heading);
+            for (int i=1;i<productList.size();i++){
+                productMap.put(productList.get(i).getName(),
+                        productList.get(i));
+            }
         }
     }
 

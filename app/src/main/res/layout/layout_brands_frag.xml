@@ -4,6 +4,12 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NExt"
+        android:visibility="gone"
+        android:id="@+id/btn"/>
     <android.support.v7.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

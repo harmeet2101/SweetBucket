@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
 // Get SearchView autocomplete object.
         searchAutoComplete = (SearchView.SearchAutoComplete)
                 searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchListAdapter = new SearchListAdapter(getContext(), (ArrayList<String>) searchList);
+        searchListAdapter = new SearchListAdapter(getContext(),null);
         searchAutoComplete.setAdapter(searchListAdapter);
         // Listen to search view item on click event.
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
             public void onItemClick(AdapterView<?> adapterView, View view, int itemIndex, long id) {
                 String queryString=(String)adapterView.getItemAtPosition(itemIndex);
                 searchAutoComplete.setText("" + queryString);
-                Toast.makeText(getContext(), "you clicked " + queryString, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "you clicked " + queryString+": ", Toast.LENGTH_LONG).show();
                 CommonUtils.hideSoftKeyboard(getContext(),view);
             }
         });
@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
                 for(Shop sh:response.body().getShops()){
                     searchList.add(sh.getStoreName());
                 }
-                searchListAdapter.updateDataSource((ArrayList<String>) searchList);
+                searchListAdapter.updateDataSource(null);
             }
 
             @Override
