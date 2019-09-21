@@ -215,14 +215,14 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                    /*ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
                             categoryNameMap.get(Integer.parseInt(product.getCat1Id())),
                             vendorNameMap.get(product.getVendorId())
                             ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                             product.getDiscount(),product.getUnit(),product.getStockQty()
-                    );
+                    );*/
 
-                    onProductClick.OnProductClick(details);
+                    onProductClick.OnProductClick(product.getId()+"");
                 }
             });
         }
@@ -321,7 +321,7 @@ public class BrandsRecylerAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface IOnProductClick{
-        void OnProductClick(ProductDetails productDetails);
+        void OnProductClick(String id);
         void onAllProductClickEvent();
     }
 

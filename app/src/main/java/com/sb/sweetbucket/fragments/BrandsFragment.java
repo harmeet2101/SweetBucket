@@ -124,13 +124,13 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
                         if (homeDataStore.getProductMap().containsKey(queryObj.getName())) {
                            Product product = homeDataStore.getProductMap().get(queryObj.getName());
 
-                            ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
-                                    "",
-                                    ""
+                            /*ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                                    homeDataStore.getCategoryNameMap().get(Integer.parseInt(product.getCat1Id())),
+                                    homeDataStore.getVendorNameMap().get(product.getVendorId())
                                     ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
                                     product.getDiscount(),product.getUnit(),product.getStockQty()
-                            );
-                            OnProductClick(details);
+                            );*/
+                            OnProductClick(product.getId()+"");
 
                         }
                     }
@@ -237,13 +237,14 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
     }
 
     @Override
-    public void OnProductClick(ProductDetails productDetails) {
+    public void OnProductClick(String id) {
 
-        Bundle pBundle = new Bundle();
+       /* Bundle pBundle = new Bundle();
         pBundle.putSerializable("productDetails",productDetails);
         Intent pIntent = new Intent(getContext(),ProductDetailsActivity.class);
         pIntent.putExtras(pBundle);
-        getActivity().startActivity(pIntent);
+        getActivity().startActivity(pIntent);*/
+        loadProductDetails(id);
     }
 
     @Override
@@ -308,6 +309,39 @@ public class BrandsFragment extends Fragment implements BrandsRecylerAdapter.IOn
         );
     }
 
+    private void loadProductDetails(String id){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String base64ID = CommonUtils.getBase64EncodeString(id);
+        Call<Product> responseCall = apiInterface.getProductByID(base64ID);
+        responseCall.enqueue(new Callback<Product>() {
+
+                                 @Override
+                                 public void onResponse(Call<Product> call, Response<Product> response) {
+                                     Log.e(TAG,response.body().toString());
+                                     if(response.code()==200){
+                                         Product product = response.body();
+                                         /*ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                                                 homeDataStore.getCategoryNameMap().get(Integer.parseInt(product.getCat1Id())),
+                                                 homeDataStore.getVendorNameMap().get(product.getVendorId())
+                                                 ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
+                                                 product.getDiscount(),product.getUnit(),product.getStockQty()
+                                         );*/
+                                         Bundle pBundle = new Bundle();
+                                         pBundle.putSerializable("productDetails",response.body());
+                                         Intent pIntent = new Intent(getContext(),ProductDetailsActivity.class);
+                                         pIntent.putExtras(pBundle);
+                                         getActivity().startActivity(pIntent);
+                                     }
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<Product> call, Throwable t) {
+                                     Log.e(TAG,t.getMessage());
+                                 }
+                             }
+        );
+    }
     private void loadTrandingShops(){
         RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
         Call<List<ShopsResponse>> responseCall = apiInterface.getTredingShops();

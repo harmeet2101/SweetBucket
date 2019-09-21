@@ -12,15 +12,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.adapters.CustomerReviewAdapter;
 import com.sb.sweetbucket.adapters.HomeRecyclerAdapter;
 import com.sb.sweetbucket.adapters.SimilarProductsRecylerAdapter;
+import com.sb.sweetbucket.controllers.SharedPreferncesController;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.RestAppConstants;
+import com.sb.sweetbucket.rest.request.CheckPinRequest;
+import com.sb.sweetbucket.rest.request.ProductReviewRequest;
+import com.sb.sweetbucket.rest.response.PinCodeResponse;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.ProductReviewResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,16 +46,21 @@ import retrofit2.Response;
     public class ProductDetailsActivity extends AppCompatActivity implements View.OnClickListener,SimilarProductsRecylerAdapter.IOnClick{
     private static final String TAG = ProductDetailsActivity.class.getSimpleName();
     private ImageView backArrowImgview;
-    private TextView pCodeTextview,pCategoryTextview,pNameTextview,discTextview,basePriceTextview,dealPriceTextview;
-    private ProductDetails productDetails;
+    private TextView pCodeTextview,pCategoryTextview,pNameTextview,
+            discTextview,basePriceTextview,dealPriceTextview,tvreview,reviewTextview1,reviewTextview2;
+    private RatingBar ratingBar1,ratingBar2;
+    private Product productDetails;
     private ImageView productImageview;
     private TextView productInfoTextview,vendorTextview;
-    private Button pinCheckBtn;
-    private EditText pincodeEdittext;
-    private RecyclerView mRecylerView;
+    private Button pinCheckBtn,reviewSendBtn;
+    private EditText pincodeEdittext,reviewEdittext;
+    private RecyclerView mRecylerView, commentsRecylerView;
     private RecyclerView.LayoutManager layoutManager;
     private List<Product> productList = null;
     private SimilarProductsRecylerAdapter recylerAdapter;
+    private CustomerReviewAdapter reviewAdapter;
+
+    private HomeDataStore homeDataStore =HomeDataStore.getInstance();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,39 +80,60 @@ import retrofit2.Response;
         pCategoryTextview = (TextView)findViewById(R.id.pCategoryTextview);
         pNameTextview = (TextView)findViewById(R.id.tvSweetName);
         discTextview = (TextView)findViewById(R.id.discountTextview);
+        tvreview = (TextView)findViewById(R.id.tvreview);
+        reviewSendBtn = (Button)findViewById(R.id.reviewSendBtn);
+        ratingBar1= (RatingBar)findViewById(R.id.ratingView01);
+        ratingBar2 = (RatingBar)findViewById(R.id.ratingView02);
+        reviewEdittext = (EditText)findViewById(R.id.reviewEdittext);
+        reviewTextview1 = (TextView)findViewById(R.id.reviewTextview1);
+        reviewTextview2 = (TextView)findViewById(R.id.reviewTextview2);
         basePriceTextview = (TextView)findViewById(R.id.basepriceTextview);
         dealPriceTextview = (TextView)findViewById(R.id.tvPrice);
         productImageview = (ImageView)findViewById(R.id.imgview01);
         productInfoTextview = (TextView)findViewById(R.id.proInfoTextview);
         vendorTextview = (TextView)findViewById(R.id.vendorTextview);
+        setUpData();
         mRecylerView = (RecyclerView)findViewById(R.id.similarRecylerview);
+        commentsRecylerView = (RecyclerView)findViewById(R.id.customerReviewRecylerview);
         layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         mRecylerView.setLayoutManager(layoutManager);
+        commentsRecylerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false));
         recylerAdapter = new SimilarProductsRecylerAdapter(getApplicationContext(),productList,this);
+        reviewAdapter = new CustomerReviewAdapter(getApplicationContext(),productDetails.getRatingList());
+        commentsRecylerView.setAdapter(reviewAdapter);
         mRecylerView.setAdapter(recylerAdapter);
         mRecylerView.setNestedScrollingEnabled(false);
-        setUpData();
+
         pinCheckBtn.setOnClickListener(this);
+        reviewSendBtn.setOnClickListener(this);
     }
 
     private void setUpData(){
         Bundle bundle = getIntent().getExtras();
-        productDetails = (ProductDetails)bundle.getSerializable("productDetails");
+        productDetails = (Product)bundle.getSerializable("productDetails");
         if (productDetails!=null){
 
             pCodeTextview.setText("Product Code: "+productDetails.getProductCode());
-            pCategoryTextview.setText("Product Category: "+productDetails.getCatName());
+            pCategoryTextview.setText("Product Category: "+homeDataStore.getCategoryNameMap().
+                    get(Integer.parseInt(productDetails.getCat1Id())));
             pNameTextview.setText(productDetails.getName());
             dealPriceTextview.setText("Rs "+productDetails.getSalePrice());
             discTextview.setText(productDetails.getDiscount()+" Off");
             basePriceTextview.setText("Rs "+productDetails.getBasePrice());
             productInfoTextview.setText(productDetails.getInfo());
-            vendorTextview.setText(productDetails.getVendorName());
+            if (productDetails.getRatingList()!=null && !productDetails.getRatingList().isEmpty()){
+                int size = productDetails.getRatingList().size();
+                tvreview.setText(size+" Reviews");
+                reviewTextview1.setText(size+" Ratings and Reviews");
+                ratingBar1.setRating(Float.parseFloat(productDetails.getRatingList().get(0).getRating()));
+                reviewTextview2.setText(productDetails.getRatingList().get(0).getRating()+" out of 5 Stars");
+            }
+            vendorTextview.setText(homeDataStore.getVendorNameMap().get(productDetails.getVendorId()));
             Picasso.with(this).load(RestAppConstants.BASE_URL +productDetails.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(productImageview);
         }
-        if (productDetails.getCatId()!=null && !productDetails.getCatId().isEmpty())
-        loadSimilarProducts(productDetails.getCatId());
+        if (productDetails.getCat1Id()!=null && !productDetails.getCat1Id().isEmpty())
+        loadSimilarProducts(productDetails.getCat1Id());
     }
 
     @Override
@@ -107,6 +142,14 @@ import retrofit2.Response;
         switch (view.getId()){
 
             case R.id.pinCheckBtn:
+                if (!pincodeEdittext.getText().toString().isEmpty())
+                checkPincode(pincodeEdittext.getText().toString().trim());
+                break;
+            case R.id.reviewSendBtn:
+                postYourReviews(new ProductReviewRequest(productDetails.getId(),ratingBar2.getRating(),
+                        reviewEdittext.getText().toString()));
+                reviewEdittext.setText("");
+                ratingBar2.setRating(0f);
                 break;
         }
     }
@@ -135,8 +178,59 @@ import retrofit2.Response;
         );
     }
 
+
+    private void checkPincode(String pinCode){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        Call<PinCodeResponse> responseCall = apiInterface.checkPin(new CheckPinRequest(Integer.parseInt(pinCode)));
+        responseCall.enqueue(new Callback<PinCodeResponse>() {
+
+                                 @Override
+                                 public void onResponse(Call<PinCodeResponse> call, Response<PinCodeResponse> response) {
+                                     Log.e(TAG,response.body().toString());
+                                     Toast.makeText(getApplicationContext(),R.string.pin_delievry_status_succes,Toast.LENGTH_SHORT).show();
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<PinCodeResponse> call, Throwable t) {
+                                    // Log.e(TAG,"error"+t.getMessage());
+                                     Toast.makeText(getApplicationContext(),R.string.pin_delievry_status_fail,Toast.LENGTH_SHORT).show();
+                                     // recylerAdapter.updateDataSource(new ArrayList<Product>());
+
+                                 }
+
+                             }
+        );
+    }
+
+    private void postYourReviews(ProductReviewRequest request){
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String apiToken = SharedPreferncesController.getSharedPrefController(getApplicationContext()).getApiToken();
+        if(apiToken!=null && !apiToken.isEmpty()) {
+            Call<ProductReviewResponse> responseCall = apiInterface.postProductReviews(request, "Bearer " + apiToken);
+            responseCall.enqueue(new Callback<ProductReviewResponse>() {
+
+                                     @Override
+                                     public void onResponse(Call<ProductReviewResponse> call, Response<ProductReviewResponse> response) {
+                                         Log.e(TAG, response.body().toString());
+                                         Toast.makeText(getApplicationContext(), response.body().getMsg(), Toast.LENGTH_SHORT).show();
+                                     }
+
+                                     @Override
+                                     public void onFailure(Call<ProductReviewResponse> call, Throwable t) {
+                                         // Log.e(TAG,"error"+t.getMessage());
+                                         Toast.makeText(getApplicationContext(), "Some Error occured", Toast.LENGTH_SHORT).show();
+                                         // recylerAdapter.updateDataSource(new ArrayList<Product>());
+
+                                     }
+
+                                 }
+            );
+        }
+    }
+
     @Override
-    public void testOnClick(ProductDetails productDetails) {
+    public void testOnClick(Product productDetails) {
 
         Bundle pBundle = new Bundle();
         pBundle.putSerializable("productDetails",productDetails);

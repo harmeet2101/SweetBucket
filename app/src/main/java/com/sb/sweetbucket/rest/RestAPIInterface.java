@@ -1,12 +1,16 @@
 package com.sb.sweetbucket.rest;
 
+import com.sb.sweetbucket.rest.request.CheckPinRequest;
 import com.sb.sweetbucket.rest.request.HomeRequest;
 import com.sb.sweetbucket.rest.request.LoginRequest;
+import com.sb.sweetbucket.rest.request.ProductReviewRequest;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
+import com.sb.sweetbucket.rest.response.PinCodeResponse;
 import com.sb.sweetbucket.rest.response.Product;
+import com.sb.sweetbucket.rest.response.ProductReviewResponse;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
@@ -97,4 +101,29 @@ public interface RestAPIInterface {
 
     @GET("api/similarproducts/{cat-id}")
     Call<List<Product>> getSimilarProductsByCategory(@Path("cat-id") String category);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/checkMyPin")
+    Call<PinCodeResponse> checkPin(@Body CheckPinRequest checkPinRequest);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/product/{id}")
+    Call<Product> getProductByID(@Path(value = "id",encoded = true) String productID);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/productReview")
+    Call<ProductReviewResponse> postProductReviews(@Body ProductReviewRequest request,
+                                                   @Header("Authorization") String authorization);
 }

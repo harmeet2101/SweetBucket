@@ -264,6 +264,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:padding="10dp"
+                    android:maxLength="6"
                     android:id="@+id/edittextPinCode"
                     android:hint="Your Pincode"
                     android:inputType="number"
@@ -276,6 +277,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="16sp"
+                    android:background="@android:color/holo_green_dark"
+                    android:textColor="@android:color/white"
                     android:text="Check"
                     android:id="@+id/pinCheckBtn"
                     android:textAllCaps="false"
@@ -351,6 +354,112 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="20dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ratings_and_revies_text_1"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="normal"
+                android:id="@+id/reviewTextview1"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:numStars="5"
+                    android:rating="0"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:isIndicator="true"
+                    android:id="@+id/ratingView01"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ratings_and_revies_text_2"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="normal"
+                    android:id="@+id/reviewTextview2"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ratings_and_revies_text_3"
+                    android:textSize="@dimen/text_size_16"
+                    android:textStyle="normal"
+                    android:id="@+id/reviewTextview3"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="10dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:numStars="5"
+                    android:layout_marginRight="10dp"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:isIndicator="false"
+                    android:id="@+id/ratingView02"/>
+
+
+            </LinearLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:id="@+id/reviewEdittext"
+                android:paddingLeft="10dp"
+                android:background="@drawable/background_rectangular_edittext"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="@android:color/white"
+                android:text="Submit"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/reviewSendBtn"
+                android:textAllCaps="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customer reviews"
+                android:textSize="@dimen/text_size_16"
+                android:textStyle="normal"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/customerReviewRecylerview"
+                android:layout_marginTop="10dp">
+
+            </android.support.v7.widget.RecyclerView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

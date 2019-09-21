@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.model.ProductDetails;
 import com.sb.sweetbucket.rest.RestAppConstants;
 import com.sb.sweetbucket.rest.response.Category;
@@ -31,7 +32,7 @@ public class PopularProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-
+    private HomeDataStore homeDataStore = HomeDataStore.getInstance();
 
     private Context mContext;
     private List<Product> responseList;
@@ -135,12 +136,7 @@ public class PopularProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
-                            ""/*categoryNameMap.get(Integer.parseInt(product.getCat1Id()))*/,
-                            ""/*vendorNameMap.get(product.getVendorId())*/
-                            ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
-                            product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));
+                    iOnClick.testOnClick(product.getId()+"");
                 }
             });
         }
@@ -153,7 +149,7 @@ public class PopularProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
             discountTextview.setText(product.getDiscount()+" Off");
             Picasso.with(mContext).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);
-            vendorTextview.setText(vendorNameMap.get(product.getVendorId()));
+            vendorTextview.setText(homeDataStore.getVendorNameMap().get(product.getVendorId()));
 
         }
     }
@@ -171,7 +167,7 @@ public class PopularProductsRecylerAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public interface IOnClick{
-        void testOnClick(ProductDetails productDetails);
+        void testOnClick(String id);
     }
     public void updateDataSource(List<Product> productList){
         this.responseList = productList;

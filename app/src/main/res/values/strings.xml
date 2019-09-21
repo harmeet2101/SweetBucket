@@ -77,4 +77,10 @@ We started as a small business in Varanasi [Kashi Vishwanath],in the northern In
     </string>
     <string name="app_close_dialog_message">Do you want to logout?</string>
     <string name="app_exit_dialog_message">Do you want to Exit?</string>
+    <string name="pin_delievry_status_succes">Service available at your pin</string>
+    <string name="pin_delievry_status_fail">Sorry!,Currently service available at your pin</string>
+    
+    <string name="ratings_and_revies_text_1">0 Ratings and Reviews</string>
+    <string name="ratings_and_revies_text_2">out of 5 Stars</string>
+    <string name="ratings_and_revies_text_3">Review and Rate this product</string>
 </resources>

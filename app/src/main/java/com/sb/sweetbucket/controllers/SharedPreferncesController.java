@@ -12,6 +12,7 @@ public class SharedPreferncesController {
     private final SharedPreferences sharedPreferences;
     private static SharedPreferncesController controller;
     private static final String isUserLoggedIn = "isUserLoggedIn";
+    private static final String API_TOKEN = "api_token";
     private SharedPreferncesController(Context context) {
 
         this.sharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
@@ -27,6 +28,14 @@ public class SharedPreferncesController {
 
     public void setIsUserLoggedIn(boolean status){
         sharedPreferences.edit().putBoolean(isUserLoggedIn,status).commit();
+    }
+
+    public void saveAPIToken(String token){
+        sharedPreferences.edit().putString(API_TOKEN,token).commit();
+    }
+
+    public String getApiToken(){
+        return sharedPreferences.getString(API_TOKEN,null);
     }
 
     public boolean isUserLoggedIn(){

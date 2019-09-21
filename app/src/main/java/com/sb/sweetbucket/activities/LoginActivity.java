@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity{
 
                             SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                             controller.setIsUserLoggedIn(true);
+                            controller.saveAPIToken(response.body().getApiToken());
                             Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);

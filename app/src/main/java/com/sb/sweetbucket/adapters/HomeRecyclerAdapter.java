@@ -139,11 +139,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iOnClick.testOnClick(new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
-                            categoryNameMap.get(Integer.parseInt(product.getCat1Id())),vendorNameMap.get(product.getVendorId())
-                    ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
-                            product.getDiscount(),product.getUnit(),product.getStockQty()
-                    ));
+                    iOnClick.testOnClick(product.getId()+"");
                 }
             });
         }
@@ -174,7 +170,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface IOnClick{
-        void testOnClick(ProductDetails productDetails);
+        void testOnClick(String id);
     }
     public void updateDataSource(HomeResponse homeResponse){
         this.responseList = homeResponse.getProducts();

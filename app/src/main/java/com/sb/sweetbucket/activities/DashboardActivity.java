@@ -317,6 +317,7 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                     public void onClick(DialogInterface dialog, int id) {
                         SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                         controller.setIsUserLoggedIn(false);
+                        controller.saveAPIToken(null);
                         dialog.cancel();
                         finish();
 

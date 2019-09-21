@@ -4,6 +4,7 @@ package com.sb.sweetbucket.rest.response;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Product implements Serializable{
 
@@ -38,6 +39,8 @@ public class Product implements Serializable{
     @SerializedName("created_at")
     private String createdAt;
     private String updatedAt;
+    @SerializedName("ratings")
+    private List<Rating> ratingList;
     public Integer getId() {
         return id;
     }
@@ -214,6 +217,10 @@ public class Product implements Serializable{
         this.updatedAt = updatedAt;
     }
 
+    public List<Rating> getRatingList() {
+        return ratingList;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -239,6 +246,7 @@ public class Product implements Serializable{
                 ", deletedAt=" + deletedAt +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
+                ", ratingList=" + ratingList +
                 '}';
     }
 }

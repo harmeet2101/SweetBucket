@@ -25,11 +25,15 @@ import android.widget.Toast;
 
 import com.sb.sweetbucket.activities.LoginActivity;
 import com.sb.sweetbucket.activities.ProductDetailsActivity;
+import com.sb.sweetbucket.activities.ShopDetailActivity;
 import com.sb.sweetbucket.activities.SweetBucketApplication;
+import com.sb.sweetbucket.activities.SweetsCategoryActivity;
 import com.sb.sweetbucket.adapters.HomeRecyclerAdapter;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.adapters.SearchListAdapter;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.model.ProductDetails;
+import com.sb.sweetbucket.model.Search;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.request.HomeRequest;
 import com.sb.sweetbucket.rest.response.Category;
@@ -61,7 +65,8 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
     private SearchView searchView;
     private SearchListAdapter searchListAdapter;
     SearchView.SearchAutoComplete searchAutoComplete;
-    private List<String> searchList = new ArrayList<>();
+    private List<Search> mSearchList = new ArrayList<>();
+    private HomeDataStore homeDataStore;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,18 +80,52 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
         searchView.setIconifiedByDefault(false);
        // searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
+        homeDataStore = HomeDataStore.getInstance();
 // Get SearchView autocomplete object.
         searchAutoComplete = (SearchView.SearchAutoComplete)
                 searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchListAdapter = new SearchListAdapter(getContext(),null);
+        searchListAdapter = new SearchListAdapter(getContext(),(ArrayList<Search>)mSearchList);
         searchAutoComplete.setAdapter(searchListAdapter);
         // Listen to search view item on click event.
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int itemIndex, long id) {
-                String queryString=(String)adapterView.getItemAtPosition(itemIndex);
-                searchAutoComplete.setText("" + queryString);
-                Toast.makeText(getContext(), "you clicked " + queryString+": ", Toast.LENGTH_LONG).show();
+                Search queryObj=(Search)adapterView.getItemAtPosition(itemIndex);
+                searchAutoComplete.setText("" + queryObj.getName());
+
+                switch (queryObj.getType()){
+
+                    case "store": {
+                        if (homeDataStore.getShopsResponseMap().containsKey(queryObj.getName())) {
+                            Bundle bundle = new Bundle();
+                            Shop shopsResponse = homeDataStore.getShopsResponseMap().get(queryObj.getName());
+                            String _id = CommonUtils.getBase64EncodeString(shopsResponse.getVendorId());
+                            bundle.putString("vendorName", shopsResponse.getStoreName());
+                            bundle.putString("vendorID", _id);
+                            Intent intent = new Intent(getContext(), ShopDetailActivity.class);
+                            intent.putExtras(bundle);
+                            getActivity().startActivity(intent);
+                        }
+                    }
+                    break;
+
+                    case "prod": {
+                        if (homeDataStore.getProductMap().containsKey(queryObj.getName())) {
+                            Product product = homeDataStore.getProductMap().get(queryObj.getName());
+                            OnProductClick(product.getId()+"");
+
+                        }
+                    }
+                    break;
+                    case "cat": {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("category",queryObj.getName());
+                        Intent intent = new Intent(getContext(),SweetsCategoryActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                }
+                // Toast.makeText(getContext(), "you clicked " + queryObj.getName()+": "+queryObj.getType(), Toast.LENGTH_LONG).show();
                 CommonUtils.hideSoftKeyboard(getContext(),view);
             }
         });
@@ -99,16 +138,48 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
         loadSuggestionData("");
         return view;
     }
+    public void OnProductClick(String id) {
 
+        loadProductDetails(id);
+    }
 
+    private void loadProductDetails(String id){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String base64ID = CommonUtils.getBase64EncodeString(id);
+        Call<Product> responseCall = apiInterface.getProductByID(base64ID);
+        responseCall.enqueue(new Callback<Product>() {
+
+                                 @Override
+                                 public void onResponse(Call<Product> call, Response<Product> response) {
+                                     Log.e(TAG,response.body().toString());
+                                     if(response.code()==200){
+                                         Product product = response.body();
+                                        /* ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                                                 homeDataStore.getCategoryNameMap().get(Integer.parseInt(product.getCat1Id())),
+                                                 homeDataStore.getVendorNameMap().get(product.getVendorId())
+                                                 ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
+                                                 product.getDiscount(),product.getUnit(),product.getStockQty()
+                                         );*/
+                                         Bundle pBundle = new Bundle();
+                                         pBundle.putSerializable("productDetails",response.body());
+                                         Intent pIntent = new Intent(getContext(),ProductDetailsActivity.class);
+                                         pIntent.putExtras(pBundle);
+                                         getActivity().startActivity(pIntent);
+                                     }
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<Product> call, Throwable t) {
+                                     Log.e(TAG,t.getMessage());
+                                 }
+                             }
+        );
+    }
     @Override
-    public void testOnClick(ProductDetails productDetails) {
+    public void testOnClick(String id) {
 
-        Bundle pBundle = new Bundle();
-        pBundle.putSerializable("productDetails",productDetails);
-        Intent pIntent = new Intent(getContext(),ProductDetailsActivity.class);
-        pIntent.putExtras(pBundle);
-        getActivity().startActivity(pIntent);
+        loadProductDetails(id);
     }
 
     public void updateData(HomeResponse homeResponse){
@@ -129,17 +200,20 @@ public class HomeFragment extends Fragment implements HomeRecyclerAdapter.IOnCli
                 //updating grid data in tis corresponding adapter
                 updateData(response.body());
 
-                // updating search view data in its corresponding adapter
                 for(Category c:response.body().getCategory()){
-                    searchList.add(c.getName());
+
+                    mSearchList.add(new Search(c.getName(),"cat"));
                 }
+
                 for(Product p:response.body().getProducts()){
-                    searchList.add(p.getName());
+
+                    mSearchList.add(new Search(p.getName(),"prod"));
                 }
                 for(Shop sh:response.body().getShops()){
-                    searchList.add(sh.getStoreName());
+
+                    mSearchList.add(new Search(sh.getStoreName(),"store"));
                 }
-                searchListAdapter.updateDataSource(null);
+                searchListAdapter.updateDataSource((ArrayList<Search>) mSearchList);
             }
 
             @Override

@@ -24,6 +24,7 @@ import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.VendorResponse;
+import com.sb.sweetbucket.utils.CommonUtils;
 import com.sb.sweetbucket.utils.comparators.HIghToLowComparator;
 import com.sb.sweetbucket.utils.comparators.LowToHighComparator;
 import com.sb.sweetbucket.utils.comparators.SortByDateComparator;
@@ -54,6 +55,7 @@ public class ShopDetailActivity extends AppCompatActivity implements Spinner.OnI
     private String vendorName = null;
     private List<Product> productList;
     private SweetsCategoryRecyclerAdapter recyclerAdapter=null;
+    private HomeDataStore homeDataStore = HomeDataStore.getInstance();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,12 +160,42 @@ public class ShopDetailActivity extends AppCompatActivity implements Spinner.OnI
         });
     }
 
+    private void loadProductDetails(String id){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String base64ID = CommonUtils.getBase64EncodeString(id);
+        Call<Product> responseCall = apiInterface.getProductByID(base64ID);
+        responseCall.enqueue(new Callback<Product>() {
+
+                                 @Override
+                                 public void onResponse(Call<Product> call, Response<Product> response) {
+                                     Log.e(TAG,response.body().toString());
+                                     if(response.code()==200){
+                                         Product product = response.body();
+                                        /* ProductDetails details = new ProductDetails(product.getId(),product.getCat1Id(),product.getProductCode(),product.getName(),
+                                                 homeDataStore.getCategoryNameMap().get(Integer.parseInt(product.getCat1Id())),
+                                                 homeDataStore.getVendorNameMap().get(product.getVendorId())
+                                                 ,product.getInfo(),product.getTags(),product.getImageUrl(),product.getBasePrice(),product.getDealPrice(),product.getSalePrice(),
+                                                 product.getDiscount(),product.getUnit(),product.getStockQty()
+                                         );*/
+                                         Bundle pBundle = new Bundle();
+                                         pBundle.putSerializable("productDetails",response.body());
+                                         Intent pIntent = new Intent(getApplicationContext(),ProductDetailsActivity.class);
+                                         pIntent.putExtras(pBundle);
+                                         startActivity(pIntent);
+                                     }
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<Product> call, Throwable t) {
+                                     Log.e(TAG,t.getMessage());
+                                 }
+                             }
+        );
+    }
     @Override
-    public void OnItemClick(ProductDetails productDetails) {
-        Bundle pBundle = new Bundle();
-        pBundle.putSerializable("productDetails",productDetails);
-        Intent pIntent = new Intent(getApplicationContext(),ProductDetailsActivity.class);
-        pIntent.putExtras(pBundle);
-        startActivity(pIntent);
+    public void OnItemClick(String id) {
+
+        loadProductDetails(id);
     }
 }

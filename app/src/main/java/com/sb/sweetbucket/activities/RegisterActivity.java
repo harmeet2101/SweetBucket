@@ -77,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if(response.code()==200) {
                                 SharedPreferncesController controller = SharedPreferncesController.getSharedPrefController(getApplicationContext());
                                 controller.setIsUserLoggedIn(true);
+                                controller.saveAPIToken(response.body().getLoginResponse().getApiToken());
                                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);

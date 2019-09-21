@@ -23,7 +23,6 @@ public class ProductDetails implements Serializable
     private String discount;
     private String unit;
     private String stockQty;
-
     public ProductDetails(Integer id, String catId,String productCode, String name, String catName,
                           String vendorName, String info, String tags, String imageUrl,
                           String basePrice, String dealPrice, String salePrice, String discount, String unit, String stockQty) {
