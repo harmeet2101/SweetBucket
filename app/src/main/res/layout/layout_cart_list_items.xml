@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imgview01"
+        android:layout_margin="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/dummy_img"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imgview01"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Product Name"
+        android:id="@+id/tvSweetName"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgview01"
+        android:layout_below="@id/tvSweetName"
+        android:text="Vendor Name"
+        android:id="@+id/vendorTextview"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"/>
+
+
+    <include android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        layout="@layout/layout_cart_sub_view_drop_down"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

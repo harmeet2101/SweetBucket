@@ -1,5 +1,6 @@
 package com.sb.sweetbucket.model;
 
+import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.Shop;
@@ -19,6 +20,16 @@ public class HomeDataStore {
     private List<ShopsResponse> shopsproductResponseList;
     private List<Product> productList;
     private List<Category> categoryList;
+
+    public CartDetailsResponse getCartDetailsResponse() {
+        return cartDetailsResponse;
+    }
+
+    public void setCartDetailsResponse(CartDetailsResponse cartDetailsResponse) {
+        this.cartDetailsResponse = cartDetailsResponse;
+    }
+
+    private CartDetailsResponse cartDetailsResponse;
 
     public Map<String, Shop> getShopsResponseMap() {
         return shopsResponseMap;

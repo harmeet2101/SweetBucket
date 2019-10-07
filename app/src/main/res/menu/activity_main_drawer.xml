@@ -24,6 +24,18 @@
             android:title="@string/nav_popular"
             android:icon="@drawable/baseline_stars_black_24"/>
         <item
+            android:id="@+id/nav_order"
+            android:title="@string/nav_order"
+            android:icon="@drawable/baseline_stars_black_24"/>
+        <item
+            android:id="@+id/nav_payment"
+            android:title="@string/nav_payment"
+            android:icon="@drawable/baseline_payment_black_18"/>
+        <item
+            android:id="@+id/nav_address"
+            android:title="@string/nav_address"
+            android:icon="@drawable/baseline_stars_black_24"/>
+        <item
             android:id="@+id/nav_contact_us"
             android:title="@string/nav_contact_us"
             android:icon="@drawable/baseline_contact_support_black_24"/>

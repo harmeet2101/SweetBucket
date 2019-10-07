@@ -1,10 +1,15 @@
 package com.sb.sweetbucket.rest;
 
+import com.sb.sweetbucket.rest.request.AddCartRequest;
+import com.sb.sweetbucket.rest.request.AddressSaveRequest;
 import com.sb.sweetbucket.rest.request.CheckPinRequest;
 import com.sb.sweetbucket.rest.request.HomeRequest;
 import com.sb.sweetbucket.rest.request.LoginRequest;
 import com.sb.sweetbucket.rest.request.ProductReviewRequest;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
+import com.sb.sweetbucket.rest.response.AddCartResponse;
+import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
@@ -12,6 +17,7 @@ import com.sb.sweetbucket.rest.response.PinCodeResponse;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.ProductReviewResponse;
 import com.sb.sweetbucket.rest.response.RegisterResponse;
+import com.sb.sweetbucket.rest.response.SaveAddressResponse;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
 import com.sb.sweetbucket.rest.response.VendorResponse;
@@ -126,4 +132,37 @@ public interface RestAPIInterface {
     @POST("api/productReview")
     Call<ProductReviewResponse> postProductReviews(@Body ProductReviewRequest request,
                                                    @Header("Authorization") String authorization);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/addToCart")
+    Call<AddCartResponse> addToCart(@Body AddCartRequest request,
+                                    @Header("Authorization") String authorization);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/getCart")
+    Call<CartDetailsResponse> getCartDetails(@Header("Authorization") String authorization);
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/getAddress")
+    Call<List<Address>> getAddressList(@Header("Authorization") String authorization);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/setAddress")
+    Call<SaveAddressResponse> postSaveAddress(@Body AddressSaveRequest addressSaveRequest,
+                                              @Header("Authorization") String authorization);
 }

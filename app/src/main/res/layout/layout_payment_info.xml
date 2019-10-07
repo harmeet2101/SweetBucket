@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerTv"
+        android:text="Offer"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/offerRsTv"
+        android:text="Rs.(-)"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/subTotalTv"
+        android:layout_below="@id/offerTv"
+        android:text="SubTotal"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/subTotalRsTv"
+        android:layout_below="@id/offerRsTv"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TaxTv"
+        android:layout_below="@id/subTotalTv"
+        android:text="Tax"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TaxRsTv"
+        android:layout_below="@id/subTotalRsTv"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DelTv"
+        android:layout_below="@id/TaxTv"
+        android:text="Delivery"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DelRsTv"
+        android:layout_below="@id/TaxRsTv"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ToatPayTv"
+        android:layout_below="@id/DelTv"
+        android:text="Total Payment"
+        android:textSize="@dimen/text_size_22"
+        android:textColor="@android:color/holo_orange_dark"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TotalPayRsTv"
+        android:layout_below="@id/DelRsTv"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_22"
+        android:textColor="@android:color/holo_orange_dark"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"/>
+
+
+</RelativeLayout>

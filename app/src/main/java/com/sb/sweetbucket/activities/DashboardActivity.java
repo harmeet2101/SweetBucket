@@ -14,14 +14,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.fragments.AboutUsFragment;
+import com.sb.sweetbucket.fragments.AddressFragment;
 import com.sb.sweetbucket.fragments.BrandsFragment;
 import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
@@ -30,12 +33,19 @@ import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.fragments.SweetCategoryFragment;
 import com.sb.sweetbucket.fragments.SweetsFragment;
 import com.sb.sweetbucket.fragments.TestFragment;
+import com.sb.sweetbucket.model.HomeDataStore;
+import com.sb.sweetbucket.rest.RestAPIInterface;
+import com.sb.sweetbucket.rest.response.CartDetailsResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by harmeet on 15-08-2019.
  */
 
-public class DashboardActivity extends AppCompatActivity implements SweetsFragment.ISweetFragmentListener{
+public class DashboardActivity extends AppCompatActivity implements SweetsFragment.ISweetFragmentListener,View.OnClickListener{
 
     private final String TAG = DashboardActivity.class.getSimpleName();
     private NavigationView navigationView;
@@ -54,12 +64,15 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
     private static final String TAG_POPULAR = "popular";
     private static final String TAG_CONTACT_US = "contact_us";
     private static final String TAG_ABOUT_US = "about_us";
+    private static final String TAG_ORDERS ="my orders";
+    private static final String TAG_PAYMENT ="my payment";
+    private static final String TAG_ADDRESS ="my address";
     public static String CURRENT_TAG = TAG_HOME;
     private static final String TAG_ALL_PRODUCTS = "all_products";
-    private TextView toolbarTitleTextview;
+    private TextView toolbarTitleTextview,cartCountTextview;
     // toolbar titles respected to selected nav menu item
     private String[] activityTitles;
-
+    private ImageView cartImageView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +80,8 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbarTitleTextview = (TextView)findViewById(R.id.custom_toolbar_title);
+        cartCountTextview = (TextView)findViewById(R.id.cartCountTextview);
+        cartImageView = (ImageView)findViewById(R.id.cartImgView);
         mHandler = new Handler();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -81,8 +96,16 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
             CURRENT_TAG = TAG_HOME;
             loadHomeFragment();
         }
+        cartImageView.setOnClickListener(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // update the count...
+        getCartDetails();
+
+    }
 
     private void setToolbarTitle() {
         getSupportActionBar().setTitle(activityTitles[navItemIndex]);
@@ -120,17 +143,22 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 // Popular fragment
                 PopularProductsFragment popularProductsFragment = new PopularProductsFragment();
                 return popularProductsFragment;
-            case 5:
+
+            case 7:
+
+                AddressFragment addressFragment = new AddressFragment();
+                return addressFragment;
+            case 8:
                 // contactUsFragment fragment
                 ContactUsFragment contactUsFragment = new ContactUsFragment();
                 return contactUsFragment;
 
-            case 6:
+            case 9:
                 // aboutUsFragment fragment
                 AboutUsFragment aboutUsFragment = new AboutUsFragment();
                 return aboutUsFragment;
 
-            case 7:
+            case 10:
                 // all products fragment
                 HomeFragment allProducts = new HomeFragment();
                 return allProducts;
@@ -140,7 +168,7 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
     }
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
-        if(navItemIndex!=7)
+        if(navItemIndex!=10)
         selectNavMenu();
         setToolbarTitle();
 
@@ -218,15 +246,31 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                         CURRENT_TAG = TAG_POPULAR;
                         drawer.closeDrawers();
                         break;
+
+                    case R.id.nav_order:
+                        navItemIndex = 5;
+                        CURRENT_TAG = TAG_ORDERS;
+                        drawer.closeDrawers();
+                        break;
+                    case R.id.nav_payment:
+                        navItemIndex = 6;
+                        CURRENT_TAG = TAG_PAYMENT;
+                        drawer.closeDrawers();
+                        break;
+                    case R.id.nav_address:
+                        navItemIndex = 7;
+                        CURRENT_TAG = TAG_ADDRESS;
+                        drawer.closeDrawers();
+                        break;
                     case R.id.nav_contact_us:
                         // launch new intent instead of loading fragment
                         //startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
-                        navItemIndex = 5;
+                        navItemIndex = 8;
                         CURRENT_TAG = TAG_CONTACT_US;
                         drawer.closeDrawers();
                         break;
                     case R.id.nav_about_us:
-                        navItemIndex = 6;
+                        navItemIndex = 9;
                         // launch new intent instead of loading fragment
                        // startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
                         CURRENT_TAG = TAG_ABOUT_US;
@@ -234,7 +278,6 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                         break;
 
                     case R.id.nav_logout:
-                       // navItemIndex = 7;
                         drawer.closeDrawers();
                        showLogoutAlertDialog();
                         return false;
@@ -383,8 +426,53 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
     }
 
     public void switchToHomeFragment(){
-        navItemIndex = 7;
+        navItemIndex = 10;
         CURRENT_TAG = TAG_ALL_PRODUCTS;
         loadHomeFragment();
+    }
+
+
+    private void getCartDetails(){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String apiToken = SharedPreferncesController.getSharedPrefController(getApplicationContext()).getApiToken();
+        if(apiToken!=null && !apiToken.isEmpty()) {
+            Call<CartDetailsResponse> responseCall = apiInterface.getCartDetails("Bearer " + apiToken);
+            responseCall.enqueue(new Callback<CartDetailsResponse>() {
+
+                                     @Override
+                                     public void onResponse(Call<CartDetailsResponse> call, Response<CartDetailsResponse> response) {
+                                         Log.e(TAG, response.body().toString());
+                                         HomeDataStore homeDataStore = HomeDataStore.getInstance();
+                                         homeDataStore.setCartDetailsResponse(response.body());
+                                         cartCountTextview.setText(response.body().getCartList().size()+"");
+                                         //  Toast.makeText(getApplicationContext(), response.body().toString(), Toast.LENGTH_SHORT).show();
+                                     }
+
+                                     @Override
+                                     public void onFailure(Call<CartDetailsResponse> call, Throwable t) {
+                                         Toast.makeText(getApplicationContext(), "Some Error occured", Toast.LENGTH_SHORT).show();
+
+                                     }
+
+                                 }
+            );
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        int id = view.getId();
+        switch (id){
+
+            case R.id.cartImgView:
+                Intent intent = new Intent(getApplicationContext(),CartDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("cartDetails",HomeDataStore.getInstance().getCartDetailsResponse());
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -29,6 +29,9 @@
     <string name="nav_shops">Shops</string>
     <string name="nav_brands">Brands</string>
     <string name="nav_popular">Popular</string>
+    <string name="nav_order">My Orders</string>
+    <string name="nav_payment">My Payments</string>
+    <string name="nav_address">My Address</string>
     <string name="nav_contact_us">Contact Us</string>
     <string name="nav_about_us">About Us</string>
     <string name="nav_logout">Logout</string>
@@ -40,6 +43,9 @@
         <item>Shops</item>
         <item>Brands</item>
         <item>Popular</item>
+        <item>My Orders</item>
+        <item>My Payments</item>
+        <item>My Address</item>
         <item>Contact Us</item>
         <item>About Us</item>
         <item>All Products</item>
@@ -53,6 +59,9 @@
     <string name="activity_title_about_us">About Us</string>
     <string name="activity_title_contact_us">Contact Us</string>
     <string name="activity_title_popular">Popular</string>
+    <string name="activity_title_orders">My Orders</string>
+    <string name="activity_title_payments">My Payments</string>
+    <string name="activity_title_address">My Address</string>
     <string name="activity_title_brands">Brands</string>
     <string name="activity_title_shops">Shops</string>
     <string name="activity_title_sweets">Sweets</string>
@@ -83,4 +92,12 @@ We started as a small business in Varanasi [Kashi Vishwanath],in the northern In
     <string name="ratings_and_revies_text_1">0 Ratings and Reviews</string>
     <string name="ratings_and_revies_text_2">out of 5 Stars</string>
     <string name="ratings_and_revies_text_3">Review and Rate this product</string>
+
+
+    <string-array name="inc_spinner_items">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>More</item>
+    </string-array>
 </resources>

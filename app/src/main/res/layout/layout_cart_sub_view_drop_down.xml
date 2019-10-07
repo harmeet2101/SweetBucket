@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/itemCountTv"
+        android:textSize="@dimen/text_size_16"
+        android:layout_margin="10dp"/>
+
+    <Spinner
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/incSpinner"
+        android:layout_marginTop="10dp">
+    </Spinner>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:text="Price"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/basepriceTextview"
+        android:layout_alignParentRight="true"/>
+</LinearLayout>
