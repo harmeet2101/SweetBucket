@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.activities.AddNewAddressActivity;
@@ -18,7 +19,9 @@ import com.sb.sweetbucket.activities.SweetBucketApplication;
 import com.sb.sweetbucket.adapters.AddressFragRecylerAdapter;
 import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.rest.RestAPIInterface;
+import com.sb.sweetbucket.rest.request.DelAddressRequest;
 import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.response.DelAddressResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,7 @@ import retrofit2.Response;
  * Created by harmeet on 06-10-2019.
  */
 
-public class AddressFragment extends Fragment {
+public class AddressFragment extends Fragment implements AddressFragRecylerAdapter.IAddressFragmentCallback{
 
     private static final String TAG = AddressFragment.class.getSimpleName();
     private Button addButton;
@@ -48,7 +51,7 @@ public class AddressFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.delRecylerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recylerAdapter = new AddressFragRecylerAdapter(getActivity(),addressList);
+        recylerAdapter = new AddressFragRecylerAdapter(getActivity(),addressList,this);
         recyclerView.setAdapter(recylerAdapter);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,5 +97,33 @@ public class AddressFragment extends Fragment {
             });
         }
 
+    }
+
+    private void deleteAddress(DelAddressRequest delAddressRequest){
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String apiToken = SharedPreferncesController.getSharedPrefController(getActivity()).getApiToken();
+
+        if(apiToken!=null && !apiToken.isEmpty()){
+
+            Call<DelAddressResponse> responseCall = apiInterface.delAddress(delAddressRequest,"Bearer "+apiToken);
+            responseCall.enqueue(new Callback<DelAddressResponse>() {
+                @Override
+                public void onResponse(Call<DelAddressResponse> call, Response<DelAddressResponse> response) {
+                    Log.e(TAG,response.body().toString());
+                    Toast.makeText(getContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                    getAddressList();
+                }
+
+                @Override
+                public void onFailure(Call<DelAddressResponse> call, Throwable t) {
+                    Log.e(TAG,t.getMessage());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void delAddress(DelAddressRequest delAddressRequest) {
+        deleteAddress(delAddressRequest);
     }
 }

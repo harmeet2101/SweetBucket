@@ -9,29 +9,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sb.sweetbucket.R;
-import com.sb.sweetbucket.rest.request.DelAddressRequest;
-import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.RestAppConstants;
+import com.sb.sweetbucket.rest.response.OrderProduct;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
- * Created by harmeet on 06-10-2019.
+ * Created by harmeet on 08-10-2019.
  */
 
-public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderedProductRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = OrderedProductRecyclerAdapter.class.getSimpleName();
+    private Context context;
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-    private Context context;
-    private List<Address> addressList;
-    private IAddressFragmentCallback fragmentCallback;
+    private List<OrderProduct> responseList;
 
-    public AddressFragRecylerAdapter(Context context, List<Address> addressList,IAddressFragmentCallback fragmentCallback) {
+    public OrderedProductRecyclerAdapter(Context context, List<OrderProduct> responseList) {
         this.context = context;
-        this.addressList = addressList;
-        this.fragmentCallback = fragmentCallback;
+        this.responseList = responseList;
     }
+
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,17 +42,17 @@ public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView
             case ITEM_TYPE__LOADING_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading,
                         parent, false);
-                return new AddressFragRecylerAdapter.LoadingDataViewHolder(view);
+                return new LoadingDataViewHolder(view);
             }
             case ITEM_TYPE__EMPTY_LIST: {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_empty_list,
                         parent, false);
-                return new AddressFragRecylerAdapter.EmptyDataViewHolder(view);
+                return new EmptyDataViewHolder(view);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
-                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_address_recycler_items,
+                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_details_screen_recyler_items,
                         parent, false);
-                return new AddressFragRecylerAdapter.ProductDataViewHolder(view3);
+                return new ProductDataViewHolder(view3);
             }
         }
 
@@ -63,9 +65,9 @@ public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView
     public int getItemViewType(int position) {
         int viewType = 0;
 
-        if (addressList == null) {
+        if (responseList == null) {
             viewType = ITEM_TYPE__LOADING_LIST;
-        } else if (addressList.isEmpty()) {
+        } else if (responseList.isEmpty()) {
             viewType = ITEM_TYPE__EMPTY_LIST;
         }
         else
@@ -81,11 +83,11 @@ public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView
             case ITEM_TYPE__LOADING_LIST:
                 break;
             case ITEM_TYPE__EMPTY_LIST:
-                AddressFragRecylerAdapter.EmptyDataViewHolder emptyDataViewHolder = (AddressFragRecylerAdapter.EmptyDataViewHolder) holder;
-                emptyDataViewHolder.update("No Address Found");
+                EmptyDataViewHolder emptyDataViewHolder = (EmptyDataViewHolder) holder;
+                emptyDataViewHolder.updateView("Cart Empty");
                 break;
             case ITEM_TYPE_PRODUCT_ITEM:
-                bindProductViewHolder(holder,addressList.get(position));
+                bindProductViewHolder(holder,responseList.get(position));
                 break;
         }
 
@@ -93,56 +95,58 @@ public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Address address){
-        AddressFragRecylerAdapter.ProductDataViewHolder dataViewHolder = (AddressFragRecylerAdapter.ProductDataViewHolder)holder;
-        dataViewHolder.updateView(address);
+    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,OrderProduct product){
+        ProductDataViewHolder dataViewHolder = (ProductDataViewHolder)holder;
+        dataViewHolder.updateView(product);
     }
     @Override
     public int getItemCount() {
-        if (addressList == null || addressList.isEmpty()) {
+        if (responseList == null || responseList.isEmpty()) {
             return 1;
         } else {
-            return addressList.size();
+            return responseList.size();
         }
 
     }
 
     private class ProductDataViewHolder extends RecyclerView.ViewHolder{
         private ViewGroup mainView;
-        private TextView tvAddress01,tvAddress02;
-        private ImageView delImg;
-        private Address address;
+        private TextView tvSweetName,itemCountTv;
+        private TextView basePriceTextview;
+        private ImageView imgview01;
+        private OrderProduct product;
         public ProductDataViewHolder(View view) {
             super(view);
             mainView = (ViewGroup)view.findViewById(R.id.mainView);
-            tvAddress01 = (TextView)view.findViewById(R.id.tvAddress01);
-            tvAddress02 = (TextView)view.findViewById(R.id.tvAddress02);
-            delImg = (ImageView)view.findViewById(R.id.delImg);
-            delImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            imgview01 = (ImageView)view.findViewById(R.id.imgview01);
+            tvSweetName = (TextView)view.findViewById(R.id.tvSweetName);
+            itemCountTv = (TextView)view.findViewById(R.id.itemCountTv);
+            basePriceTextview = (TextView)view.findViewById(R.id.basepriceTextview);
 
-                    fragmentCallback.delAddress(new DelAddressRequest(address.getId()+""));
-                }
-            });
         }
 
-        public void updateView(Address address){
-            this.address = address;
-            tvAddress01.setText(address.getAddress1());
-            tvAddress02.setText(address.getCity()+","+address.getState()+" "+address.getPinCode()+","+address.getCountry());
+        public void updateView(OrderProduct product){
+            this.product = product;
+            tvSweetName.setText(product.getName());
+            basePriceTextview.setText("Rs "+product.getOrderAmount());
+
+            Picasso.with(context).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
+                    placeholder(R.drawable.dummy_img).into(imgview01);
+            itemCountTv.setText(product.getProductQty());
+
         }
 
     }
 
     private class EmptyDataViewHolder extends RecyclerView.ViewHolder {
+
         private TextView tvName;
         public EmptyDataViewHolder(View view) {
             super(view);
             tvName = (TextView)view.findViewById(R.id.tvName);
         }
 
-        public void update(String txt){
+        public void updateView(String txt){
             tvName.setText(txt);
         }
     }
@@ -152,16 +156,8 @@ public class AddressFragRecylerAdapter extends RecyclerView.Adapter<RecyclerView
             super(view);
         }
     }
-
-
-
-
-    public void updateDataSource(List<Address> addressList){
-        this.addressList = addressList;
+    public void updateDataSource(List<OrderProduct> responseList){
+        this.responseList = responseList;
         notifyDataSetChanged();
-    }
-
-    public interface IAddressFragmentCallback{
-        void delAddress(DelAddressRequest delAddressRequest);
     }
 }

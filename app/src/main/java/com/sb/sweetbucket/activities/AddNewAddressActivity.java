@@ -74,9 +74,10 @@ public class AddNewAddressActivity extends AppCompatActivity {
             responseCall.enqueue(new Callback<SaveAddressResponse>() {
                 @Override
                 public void onResponse(Call<SaveAddressResponse> call, Response<SaveAddressResponse> response) {
-                    Log.e(TAG,response.body().toString());
+
                     if (response!=null){
                         Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
 

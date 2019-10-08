@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imgview01"
+        android:layout_margin="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/dummy_img"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imgview01"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:text="Product Name"
+        android:id="@+id/tvSweetName"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tvSweetName"
+        android:text="X"
+        android:id="@+id/cross"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:layout_toRightOf="@id/cross"
+        android:id="@+id/itemCountTv"
+        android:textSize="@dimen/text_size_16"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unit"
+        android:layout_toRightOf="@id/itemCountTv"
+        android:id="@+id/unitTv"
+        android:textSize="@dimen/text_size_16"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:text="Price"
+        android:layout_marginRight="20dp"
+        android:id="@+id/basepriceTextview"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

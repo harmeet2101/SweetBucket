@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/transIdTv"
+        android:text="Transaction Id"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/transIdTv02"
+        android:text="#xxx"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_orange_dark"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/modeTv"
+        android:layout_below="@id/transIdTv"
+        android:text="Payment Mode"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/modeTv02"
+        android:layout_below="@id/transIdTv02"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Cash"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recTv"
+        android:layout_below="@id/modeTv"
+        android:text="Received"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recTv02"
+        android:layout_below="@id/modeTv02"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pendingTv"
+        android:layout_below="@id/recTv"
+        android:text="Pending"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pendingTv02"
+        android:layout_below="@id/recTv02"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Rs.xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateTv"
+        android:layout_below="@id/pendingTv"
+        android:text="Date"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateTv02"
+        android:layout_below="@id/pendingTv02"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="xxx"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"/>
+</RelativeLayout>

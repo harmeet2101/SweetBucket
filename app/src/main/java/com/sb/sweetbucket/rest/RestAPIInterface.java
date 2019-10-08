@@ -3,16 +3,21 @@ package com.sb.sweetbucket.rest;
 import com.sb.sweetbucket.rest.request.AddCartRequest;
 import com.sb.sweetbucket.rest.request.AddressSaveRequest;
 import com.sb.sweetbucket.rest.request.CheckPinRequest;
+import com.sb.sweetbucket.rest.request.DelAddressRequest;
 import com.sb.sweetbucket.rest.request.HomeRequest;
 import com.sb.sweetbucket.rest.request.LoginRequest;
+import com.sb.sweetbucket.rest.request.OrderDetailRequest;
 import com.sb.sweetbucket.rest.request.ProductReviewRequest;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.response.AddCartResponse;
 import com.sb.sweetbucket.rest.response.Address;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.Category;
+import com.sb.sweetbucket.rest.response.DelAddressResponse;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
+import com.sb.sweetbucket.rest.response.OrderDetailResponse;
+import com.sb.sweetbucket.rest.response.OrdersResponse;
 import com.sb.sweetbucket.rest.response.PinCodeResponse;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.ProductReviewResponse;
@@ -20,6 +25,7 @@ import com.sb.sweetbucket.rest.response.RegisterResponse;
 import com.sb.sweetbucket.rest.response.SaveAddressResponse;
 import com.sb.sweetbucket.rest.response.Shop;
 import com.sb.sweetbucket.rest.response.ShopsResponse;
+import com.sb.sweetbucket.rest.response.TransactionResponse;
 import com.sb.sweetbucket.rest.response.VendorResponse;
 
 import java.util.ArrayList;
@@ -165,4 +171,31 @@ public interface RestAPIInterface {
     @POST("api/setAddress")
     Call<SaveAddressResponse> postSaveAddress(@Body AddressSaveRequest addressSaveRequest,
                                               @Header("Authorization") String authorization);
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/delAddress")
+    Call<DelAddressResponse> delAddress(@Body DelAddressRequest delAddressRequest,
+                                        @Header("Authorization") String authorization);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/orderDetails")
+    Call<OrderDetailResponse> getOrderDetails(@Body OrderDetailRequest orderDetailRequest,
+                                              @Header("Authorization") String authorization);
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @GET("api/orderList")
+    Call<OrdersResponse> getOrders(@Header("Authorization") String authorization);
+
+    @GET("api/paymentList")
+    Call<TransactionResponse> getTransactionDetails(@Header("Authorization") String authorization);
 }

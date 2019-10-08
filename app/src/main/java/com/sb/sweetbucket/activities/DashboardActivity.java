@@ -28,6 +28,8 @@ import com.sb.sweetbucket.fragments.AddressFragment;
 import com.sb.sweetbucket.fragments.BrandsFragment;
 import com.sb.sweetbucket.fragments.ContactUsFragment;
 import com.sb.sweetbucket.fragments.HomeFragment;
+import com.sb.sweetbucket.fragments.OrderFragment;
+import com.sb.sweetbucket.fragments.PaymentFragment;
 import com.sb.sweetbucket.fragments.PopularProductsFragment;
 import com.sb.sweetbucket.fragments.ShopFragment;
 import com.sb.sweetbucket.fragments.SweetCategoryFragment;
@@ -144,6 +146,13 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
                 PopularProductsFragment popularProductsFragment = new PopularProductsFragment();
                 return popularProductsFragment;
 
+            case 5:
+                OrderFragment orderFragment = new OrderFragment();
+                return orderFragment;
+
+            case 6:
+                PaymentFragment paymentFragment = new PaymentFragment();
+                return paymentFragment;
             case 7:
 
                 AddressFragment addressFragment = new AddressFragment();
