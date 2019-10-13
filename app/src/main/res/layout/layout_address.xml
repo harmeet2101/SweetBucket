@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/mainView"
     android:orientation="vertical">
 
     <TextView
@@ -18,15 +19,12 @@
         android:id="@+id/tvAddress02"
         android:text="Address 2"/>
 
-    <RadioGroup
-        android:layout_width="match_parent"
+    <RadioButton
+        android:id="@+id/rb01"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/rg01">
-        <RadioButton
-            android:id="@+id/rb01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Deliver Here"/>
-    </RadioGroup>
+        android:checked="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:text="Deliver Here"/>
 </LinearLayout>

@@ -7,17 +7,20 @@ import com.sb.sweetbucket.rest.request.DelAddressRequest;
 import com.sb.sweetbucket.rest.request.HomeRequest;
 import com.sb.sweetbucket.rest.request.LoginRequest;
 import com.sb.sweetbucket.rest.request.OrderDetailRequest;
+import com.sb.sweetbucket.rest.request.PlaceOrderRequest;
 import com.sb.sweetbucket.rest.request.ProductReviewRequest;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.response.AddCartResponse;
 import com.sb.sweetbucket.rest.response.Address;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.Category;
+import com.sb.sweetbucket.rest.response.ConfirmOrderResponse;
 import com.sb.sweetbucket.rest.response.DelAddressResponse;
 import com.sb.sweetbucket.rest.response.HomeResponse;
 import com.sb.sweetbucket.rest.response.LoginResponse;
 import com.sb.sweetbucket.rest.response.OrderDetailResponse;
 import com.sb.sweetbucket.rest.response.OrdersResponse;
+import com.sb.sweetbucket.rest.response.PaymentModeResponse;
 import com.sb.sweetbucket.rest.response.PinCodeResponse;
 import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.rest.response.ProductReviewResponse;
@@ -196,6 +199,20 @@ public interface RestAPIInterface {
     @GET("api/orderList")
     Call<OrdersResponse> getOrders(@Header("Authorization") String authorization);
 
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
     @GET("api/paymentList")
     Call<TransactionResponse> getTransactionDetails(@Header("Authorization") String authorization);
+
+    @Headers({
+            "Content-Type: application/json",
+            "X-Requested-With: XMLHttpRequest"
+    })
+    @POST("api/placeOrder")
+    Call<ConfirmOrderResponse> postOrder(@Body PlaceOrderRequest placeOrderRequest,@Header("Authorization") String authorization);
+
+    @GET("api/paymentMode")
+    Call<List<PaymentModeResponse>> getPaymentModes(@Header("Authorization") String authorization);
 }

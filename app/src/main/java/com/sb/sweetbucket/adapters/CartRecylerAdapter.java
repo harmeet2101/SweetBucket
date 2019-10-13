@@ -119,8 +119,8 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
-    private class ProductDataViewHolder extends RecyclerView.ViewHolder implements
-            AdapterView.OnItemSelectedListener{
+    private class ProductDataViewHolder extends RecyclerView.ViewHolder/* implements
+            AdapterView.OnItemSelectedListener*/{
         private ViewGroup mainView;
         private TextView tvSweetName,vendorTextview,itemCountTv;
         private TextView basePriceTextview;
@@ -144,7 +144,7 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // Apply the adapter to the spinner
             incDecSpinner.setAdapter(adapter);
-            incDecSpinner.setOnItemSelectedListener(this);
+           // incDecSpinner.setOnItemSelectedListener(this);
 
         }
 
@@ -160,7 +160,7 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemCountTv.setText(cart.getQty());
         }
 
-        @Override
+        /*@Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
             Log.e("count",i+"");
@@ -185,7 +185,7 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {
 
-        }
+        }*/
     }
 
     private class EmptyDataViewHolder extends RecyclerView.ViewHolder {

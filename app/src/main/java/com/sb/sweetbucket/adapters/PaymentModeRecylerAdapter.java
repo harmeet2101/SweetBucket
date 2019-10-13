@@ -5,34 +5,33 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
-import com.sb.sweetbucket.rest.response.Address;
-import com.sb.sweetbucket.rest.response.CustomAddress;
+import com.sb.sweetbucket.rest.response.PaymentModeResponse;
 
 import java.util.List;
 
 /**
- * Created by harmeet on 05-10-2019.
+ * Created by harmeet on 13-10-2019.
  */
 
-public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PaymentModeRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = AddressRecylerAdapter.class.getSimpleName();
+    private static final String TAG = PaymentModeRecylerAdapter.class.getSimpleName();
     private Context context;
-    private List<CustomAddress> addressList;
+    private List<PaymentModeResponse> responseList;
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
     private static SingleClickListener sClickListener;
     private int sSelected = -1;
-    public AddressRecylerAdapter(Context context, List<CustomAddress> addressList) {
+
+
+    public PaymentModeRecylerAdapter(Context context, List<PaymentModeResponse> responseList) {
         this.context = context;
-        this.addressList = addressList;
+        this.responseList = responseList;
     }
 
     @Override
@@ -50,7 +49,7 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return new EmptyDataViewHolder(view);
             }
             case ITEM_TYPE_PRODUCT_ITEM: {
-                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_address,
+                final View view3 = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_payment_mode_items,
                         parent, false);
                 return new ProductDataViewHolder(view3);
             }
@@ -65,9 +64,9 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         int viewType = 0;
 
-        if (addressList == null) {
+        if (responseList == null) {
             viewType = ITEM_TYPE__LOADING_LIST;
-        } else if (addressList.isEmpty()) {
+        } else if (responseList.isEmpty()) {
             viewType = ITEM_TYPE__EMPTY_LIST;
         }
         else
@@ -84,10 +83,10 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case ITEM_TYPE__EMPTY_LIST:
                 EmptyDataViewHolder emptyDataViewHolder = (EmptyDataViewHolder) holder;
-                emptyDataViewHolder.update("No Address Found");
+                emptyDataViewHolder.update("Not Found");
                 break;
             case ITEM_TYPE_PRODUCT_ITEM:
-                bindProductViewHolder(holder,addressList.get(position),position);
+                bindProductViewHolder(holder,responseList.get(position),position);
                 break;
         }
 
@@ -95,42 +94,39 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-    private void  bindProductViewHolder(RecyclerView.ViewHolder holder, CustomAddress address, final int position){
+    private void  bindProductViewHolder(RecyclerView.ViewHolder holder, PaymentModeResponse modeResponse, final int position){
         final ProductDataViewHolder dataViewHolder = (ProductDataViewHolder)holder;
-        dataViewHolder.updateView(address,position);
-        dataViewHolder.rb01.setChecked(sSelected == position);
+        dataViewHolder.updateView(modeResponse,position);
+       dataViewHolder.rb01.setChecked(sSelected == position);
 
     }
     @Override
     public int getItemCount() {
-        if (addressList == null || addressList.isEmpty()) {
+        if (responseList == null || responseList.isEmpty()) {
             return 1;
         } else {
-            return addressList.size();
+            return responseList.size();
         }
 
     }
 
 
     private class ProductDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private ViewGroup mainView;
-        private TextView tvAddress01,tvAddress02;
+
+        private TextView tvAddress01;
         public RadioButton rb01;
+        public PaymentModeResponse modeResponse;
         public ProductDataViewHolder(View view) {
             super(view);
-            mainView = (ViewGroup)view.findViewById(R.id.mainView);
-            tvAddress01 = (TextView)view.findViewById(R.id.tvAddress01);
-            tvAddress02 = (TextView)view.findViewById(R.id.tvAddress02);
+
+            tvAddress01 = (TextView)view.findViewById(R.id.payModeTv);
             rb01 = (RadioButton)view.findViewById(R.id.rb01);
-            mainView = (ViewGroup) view.findViewById(R.id.mainView);
 
             view.setOnClickListener(this);
         }
 
-        public void updateView(CustomAddress address,int position){
-            tvAddress01.setText(address.getAddress().getAddress1());
-            tvAddress02.setText(address.getAddress().getCity()+","+address.getAddress().getState()+" "+address.
-                    getAddress().getPinCode()+","+address.getAddress().getCountry());
+        public void updateView(PaymentModeResponse modeResponse,int position){
+            tvAddress01.setText(modeResponse.getName());
 
         }
 
@@ -162,8 +158,8 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
 
-    public void updateDataSource(List<CustomAddress> addressList){
-        this.addressList = addressList;
+    public void updateDataSource(List<PaymentModeResponse> responseList){
+        this.responseList = responseList;
         notifyDataSetChanged();
     }
 

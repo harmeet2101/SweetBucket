@@ -125,6 +125,20 @@
                 android:layout_marginTop="6dp"
                 android:id="@+id/delRecylerview">
             </android.support.v7.widget.RecyclerView>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeOrderBtn"
+                android:text="Confirm Order!"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:textAllCaps="false"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

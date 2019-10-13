@@ -476,11 +476,18 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
         switch (id){
 
             case R.id.cartImgView:
-                Intent intent = new Intent(getApplicationContext(),CartDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("cartDetails",HomeDataStore.getInstance().getCartDetailsResponse());
-                intent.putExtras(bundle);
-                startActivity(intent);
+
+
+                if (HomeDataStore.getInstance().getCartDetailsResponse()!=null &&
+                        HomeDataStore.getInstance().getCartDetailsResponse().getCartList().size()>0
+                        ){
+                    Intent intent = new Intent(getApplicationContext(),CartDetailsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("cartDetails",HomeDataStore.getInstance().getCartDetailsResponse());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else
+                    Toast.makeText(getApplicationContext(),"Cart is Empty",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
