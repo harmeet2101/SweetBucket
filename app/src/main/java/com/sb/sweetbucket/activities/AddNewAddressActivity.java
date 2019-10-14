@@ -55,10 +55,23 @@ public class AddNewAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                AddressSaveRequest addressSaveRequest = new AddressSaveRequest(add01Edittext.getText().toString(),
-                        add02Edittext.getText().toString(),Integer.parseInt(pinEdittext.getText().toString()),
-                        cityEdittext.getText().toString(),stateEdittext.getText().toString());
-                saveAddress(addressSaveRequest);
+                if (!add01Edittext.getText().toString().isEmpty()
+                        && !pinEdittext.getText().toString().isEmpty()
+                        && !cityEdittext.getText().toString().isEmpty()
+                        && !stateEdittext.getText().toString().isEmpty()
+                        ) {
+                    try {
+                        AddressSaveRequest addressSaveRequest = new AddressSaveRequest(add01Edittext.getText().toString(),
+                                add02Edittext.getText().toString(), Integer.parseInt(pinEdittext.getText().toString()),
+                                cityEdittext.getText().toString(), stateEdittext.getText().toString());
+                        saveAddress(addressSaveRequest);
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"please enter valid Pin",Toast.LENGTH_SHORT).show();
+                    }
+
+                }else
+                    Toast.makeText(getApplicationContext(),"please fill required fields",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -75,10 +88,12 @@ public class AddNewAddressActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SaveAddressResponse> call, Response<SaveAddressResponse> response) {
 
-                    if (response!=null){
+                  //  Log.e(TAG,response.body().toString());
+                    if (response!=null && response.body()!=null){
                         Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
                         finish();
-                    }
+                    }else
+                        Toast.makeText(getApplicationContext(),"some error ocurred,try again",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

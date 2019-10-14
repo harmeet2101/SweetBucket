@@ -102,6 +102,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:singleLine="true"
+            android:maxLength="6"
             android:id="@+id/pinEdittext"
             />
     </android.support.design.widget.TextInputLayout>

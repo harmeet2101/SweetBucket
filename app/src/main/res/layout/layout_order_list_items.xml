@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp"
+    android:layout_margin="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_18"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Order No."
-        android:id="@+id/orderNoTextview"
-        android:textColor="@android:color/holo_orange_dark"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Order Date"
-        android:id="@+id/orderDateTextview"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_16"
-        android:layout_below="@id/orderNoTextview"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"/>
+        android:background="#f1efef">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rs.xxx"
-        android:id="@+id/orderPriceTextview"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="@dimen/text_size_22"
-        android:layout_below="@id/orderDateTextview"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:text="Order No."
+            android:id="@+id/orderNoTextview"
+            android:textColor="@android:color/holo_orange_dark"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order Date"
+            android:id="@+id/orderDateTextview"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_16"
+            android:layout_below="@id/orderNoTextview"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Details"
-        android:layout_below="@id/orderNoTextview"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:textSize="@dimen/text_size_14"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_green_dark"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
-        android:id="@+id/detailsButton"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs.xxx"
+            android:id="@+id/orderPriceTextview"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="@dimen/text_size_18"
+            android:layout_below="@id/orderDateTextview"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
 
-</RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Details"
+            android:layout_below="@id/orderNoTextview"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"
+            android:textSize="@dimen/text_size_14"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_dark"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:id="@+id/detailsButton"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
