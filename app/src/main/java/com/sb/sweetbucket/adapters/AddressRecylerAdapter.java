@@ -1,16 +1,19 @@
 package com.sb.sweetbucket.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sb.sweetbucket.R;
+import com.sb.sweetbucket.activities.AddNewAddressActivity;
 import com.sb.sweetbucket.rest.response.Address;
 import com.sb.sweetbucket.rest.response.CustomAddress;
 
@@ -81,6 +84,7 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         int viewType = holder.getItemViewType();
         switch (viewType){
             case ITEM_TYPE__LOADING_LIST:
+
                 break;
             case ITEM_TYPE__EMPTY_LIST:
                 EmptyDataViewHolder emptyDataViewHolder = (EmptyDataViewHolder) holder;
@@ -143,9 +147,21 @@ public class AddressRecylerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private class EmptyDataViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName;
+        private Button addNewAddressBtn;
         public EmptyDataViewHolder(View view) {
             super(view);
             tvName = (TextView)view.findViewById(R.id.tvName);
+            addNewAddressBtn = (Button) view.findViewById(R.id.newAddBtn);
+            addNewAddressBtn.setVisibility(View.VISIBLE);
+
+            addNewAddressBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, AddNewAddressActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         public void update(String txt){

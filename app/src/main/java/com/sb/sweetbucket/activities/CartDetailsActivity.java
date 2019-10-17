@@ -54,7 +54,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
     private CartRecylerAdapter cartRecylerAdapter;
     private AddressRecylerAdapter addressRecylerAdapter;
     private List<Product> productList= new ArrayList<>();
-    private List<CustomAddress> addressList = new ArrayList<>();
+    private List<CustomAddress> addressList;
     private ImageView backArrowImgview;
     private Button confirOrderBtn;
     private int cartSize=0;
@@ -75,8 +75,14 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
                 getCartInfo(cartDetailsResponse);
             }
         }
-        getAddressList();
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAddressList();
     }
 
     private void setupViews(){
@@ -179,6 +185,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
                 public void onResponse(Call<List<Address>> call, Response<List<Address>> response) {
                     Log.e(TAG,response.body().toString());
 
+                    addressList = new ArrayList<>();
                     for (int i=0;i<response.body().size();i++){
 
                         CustomAddress customAddress = new CustomAddress(response.body().get(i),false);

@@ -152,7 +152,7 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.product = product;
             this.cart = cart;
             tvSweetName.setText(product.getName());
-            basePriceTextview.setText("Rs "+product.getBasePrice());
+            basePriceTextview.setText("Rs "+product.getSalePrice());
 
             Picasso.with(context).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);

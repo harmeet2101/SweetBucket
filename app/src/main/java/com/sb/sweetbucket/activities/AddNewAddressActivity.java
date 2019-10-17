@@ -55,6 +55,10 @@ public class AddNewAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (!add01Edittext.getText().toString().isEmpty() && add01Edittext.getText().toString().length()<10){
+                    Toast.makeText(getApplicationContext(),"Address Field Must have atleast 10 characters",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (!add01Edittext.getText().toString().isEmpty()
                         && !pinEdittext.getText().toString().isEmpty()
                         && !cityEdittext.getText().toString().isEmpty()

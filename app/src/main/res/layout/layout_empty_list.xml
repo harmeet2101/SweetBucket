@@ -13,4 +13,16 @@
         android:id="@+id/tvName"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Add New"
+        android:id="@+id/newAddBtn"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:background="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_14"/>
 </LinearLayout>
