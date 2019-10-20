@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.rest.RestAppConstants;
+import com.sb.sweetbucket.rest.request.UpdateCartRequest;
 import com.sb.sweetbucket.rest.response.Cart;
+import com.sb.sweetbucket.rest.response.CartProduct;
 import com.sb.sweetbucket.rest.response.Product;
 import com.squareup.picasso.Picasso;
 
@@ -29,18 +32,20 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     private Context context;
-    private List<Product> responseList;
-    private List<Cart> cartList;
+    //private List<Product> responseList;
+   // private List<Cart> cartList;
     private final String TAG = CartRecylerAdapter.class.getSimpleName();
     private static final int ITEM_TYPE__LOADING_LIST = 1;
     private static final int ITEM_TYPE__EMPTY_LIST = 2;
     private static final int ITEM_TYPE_PRODUCT_ITEM = 3;
-
-
-    public CartRecylerAdapter(Context context, List<Product> responseList,List<Cart> cartList) {
+    private UpdateCartCallback updateCartCallback;
+    private List<CartProduct> responseList;
+    public CartRecylerAdapter(Context context, List<CartProduct> responseList/*,List<Cart> cartList*/,
+                              UpdateCartCallback updateCartCallback) {
         this.context = context;
         this.responseList = responseList;
-        this.cartList = cartList;
+     //   this.cartList = cartList;
+        this.updateCartCallback = updateCartCallback;
     }
 
 
@@ -97,7 +102,7 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 emptyDataViewHolder.updateView("Cart Empty");
                 break;
             case ITEM_TYPE_PRODUCT_ITEM:
-                bindProductViewHolder(holder,responseList.get(position),cartList.get(position));
+                bindProductViewHolder(holder,responseList.get(position)/*,cartList.get(position)*/);
                 break;
         }
 
@@ -105,9 +110,9 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,Product product,Cart cart){
+    private void  bindProductViewHolder(RecyclerView.ViewHolder holder,CartProduct product/*,Cart cart*/){
         ProductDataViewHolder dataViewHolder = (ProductDataViewHolder)holder;
-        dataViewHolder.updateView(product,cart);
+        dataViewHolder.updateView(product/*,cart*/);
     }
     @Override
     public int getItemCount() {
@@ -119,73 +124,66 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
-    private class ProductDataViewHolder extends RecyclerView.ViewHolder/* implements
-            AdapterView.OnItemSelectedListener*/{
+    private class ProductDataViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener{
         private ViewGroup mainView;
-        private TextView tvSweetName,vendorTextview,itemCountTv;
+        private TextView tvSweetName,vendorTextview;
         private TextView basePriceTextview;
         private ImageView imgview01;
-        private Product product;
+        private CartProduct product;
         private HomeDataStore homeDataStore = HomeDataStore.getInstance();
-        private Spinner incDecSpinner;
-        private Cart cart;
+      //  private Cart cart;
+        private Button minusBtn,plusBtn;
+        private TextView valueTextview;
+        private int temp=1;
         public ProductDataViewHolder(View view) {
             super(view);
             mainView = (ViewGroup)view.findViewById(R.id.mainView);
             imgview01 = (ImageView)view.findViewById(R.id.imgview01);
             tvSweetName = (TextView)view.findViewById(R.id.tvSweetName);
-            itemCountTv = (TextView)view.findViewById(R.id.itemCountTv);
             basePriceTextview = (TextView)view.findViewById(R.id.basepriceTextview);
             vendorTextview = (TextView)view.findViewById(R.id.vendorTextview);
-            incDecSpinner = (Spinner)view.findViewById(R.id.incSpinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                    R.array.inc_spinner_items, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            incDecSpinner.setAdapter(adapter);
-           // incDecSpinner.setOnItemSelectedListener(this);
+            minusBtn = (Button)view.findViewById(R.id.minusBtn);
+            plusBtn = (Button)view.findViewById(R.id.plusBtn);
+            valueTextview = (TextView)view.findViewById(R.id.valueTextview);
+            minusBtn.setOnClickListener(this);
+            plusBtn.setOnClickListener(this);
 
         }
 
-        public void updateView(Product product,Cart cart){
+        public void updateView(CartProduct product/*,Cart cart*/){
             this.product = product;
-            this.cart = cart;
-            tvSweetName.setText(product.getName());
-            basePriceTextview.setText("Rs "+product.getSalePrice());
+          //  this.cart = cart;
+            tvSweetName.setText(product.getProduct().getName());
+            basePriceTextview.setText("Rs "+product.getProduct().getSalePrice());
 
-            Picasso.with(context).load(RestAppConstants.BASE_URL +product.getImageUrl() ).
+            Picasso.with(context).load(RestAppConstants.BASE_URL +product.getProduct().getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(imgview01);
-            vendorTextview.setText(homeDataStore.getVendorNameMap().get(product.getVendorId()));
-            itemCountTv.setText(cart.getQty());
-        }
-
-        /*@Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            Log.e("count",i+"");
-            switch (i)
-            {
-                case 0:
-                   // itemCountTv.setText("1");
-                    break;
-                case 1:
-                   // itemCountTv.setText("2");
-                    break;
-                case 2:
-                   // itemCountTv.setText("3");
-                    break;
-                case 3:
-                   // itemCountTv.setText("more");
-                    break;
-            }
-
+            vendorTextview.setText(homeDataStore.getVendorNameMap().get(product.getProduct().getVendorId()));
+            valueTextview.setText(product.getCart().getQty());
+            temp = Integer.parseInt(product.getCart().getQty());
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
+        public void onClick(View view) {
 
-        }*/
+            int id = view.getId();
+            switch (id){
+                case R.id.minusBtn:
+                    if (temp >0) {
+                        temp--;
+                       valueTextview.setText(temp+"");
+                        updateCartCallback.updateCart(new UpdateCartRequest(temp,product.getCart().getId()));
+                    }
+
+                    break;
+                case R.id.plusBtn:
+                    temp++;
+                    valueTextview.setText(temp+"");
+                    updateCartCallback.updateCart(new UpdateCartRequest(temp,product.getCart().getId()));
+                    break;
+            }
+        }
     }
 
     private class EmptyDataViewHolder extends RecyclerView.ViewHolder {
@@ -206,9 +204,15 @@ public class CartRecylerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(view);
         }
     }
-    public void updateDataSource(List<Product> responseList,List<Cart> cartList){
+    public void updateDataSource(List<CartProduct> responseList/*,List<Cart> cartList*/){
         this.responseList = responseList;
-        this.cartList = cartList;
+//        this.cartList = cartList;
+        Log.e(TAG,responseList.size()+":"/*+cartList.size()*/);
         notifyDataSetChanged();
+    }
+
+    public interface UpdateCartCallback{
+
+        void updateCart(UpdateCartRequest updateCartRequest);
     }
 }

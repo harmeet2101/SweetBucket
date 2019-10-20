@@ -10,6 +10,7 @@ import com.sb.sweetbucket.rest.request.OrderDetailRequest;
 import com.sb.sweetbucket.rest.request.PlaceOrderRequest;
 import com.sb.sweetbucket.rest.request.ProductReviewRequest;
 import com.sb.sweetbucket.rest.request.RegisterRequest;
+import com.sb.sweetbucket.rest.request.UpdateCartRequest;
 import com.sb.sweetbucket.rest.response.AddCartResponse;
 import com.sb.sweetbucket.rest.response.Address;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
@@ -215,4 +216,7 @@ public interface RestAPIInterface {
 
     @GET("api/paymentMode")
     Call<List<PaymentModeResponse>> getPaymentModes(@Header("Authorization") String authorization);
+
+    @POST("api/updateCart")
+    Call<CartDetailsResponse> updateCart(@Body UpdateCartRequest updateCartRequest, @Header("Authorization") String authorization);
 }

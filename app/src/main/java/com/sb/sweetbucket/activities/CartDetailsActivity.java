@@ -1,6 +1,7 @@
 package com.sb.sweetbucket.activities;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,13 +21,18 @@ import com.sb.sweetbucket.R;
 import com.sb.sweetbucket.adapters.AddressFragRecylerAdapter;
 import com.sb.sweetbucket.adapters.AddressRecylerAdapter;
 import com.sb.sweetbucket.adapters.CartRecylerAdapter;
+import com.sb.sweetbucket.adapters.CartRecylerAdapter.UpdateCartCallback;
 import com.sb.sweetbucket.adapters.PaymentModeRecylerAdapter;
 import com.sb.sweetbucket.controllers.SharedPreferncesController;
+import com.sb.sweetbucket.model.HomeDataStore;
 import com.sb.sweetbucket.rest.RestAPIInterface;
 import com.sb.sweetbucket.rest.request.CheckPinRequest;
 import com.sb.sweetbucket.rest.request.PlaceOrderRequest;
+import com.sb.sweetbucket.rest.request.UpdateCartRequest;
 import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.response.Cart;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
+import com.sb.sweetbucket.rest.response.CartProduct;
 import com.sb.sweetbucket.rest.response.ConfirmOrderResponse;
 import com.sb.sweetbucket.rest.response.CustomAddress;
 import com.sb.sweetbucket.rest.response.PaymentModeResponse;
@@ -45,17 +52,19 @@ import retrofit2.Response;
  * Created by harmeet on 05-10-2019.
  */
 
-public class CartDetailsActivity extends AppCompatActivity implements AddressRecylerAdapter.SingleClickListener{
+public class CartDetailsActivity extends AppCompatActivity implements AddressRecylerAdapter.SingleClickListener,UpdateCartCallback{
 
     private static final String TAG = CartDetailsActivity.class.getSimpleName();
-    private TextView cartItemsCountTextview,subTotalTv,delivryTv,taxTv,totalPayTv;
+    private TextView cartItemsCountTextview,subTotalTv,delivryTv,taxTv,totalPayTv,emptyView;
     private RecyclerView cartItemsRecylerView,addressRecylerView;
     private CartDetailsResponse cartDetailsResponse;
     private CartRecylerAdapter cartRecylerAdapter;
     private AddressRecylerAdapter addressRecylerAdapter;
-    private List<Product> productList= new ArrayList<>();
+    //private List<Product> productList= new ArrayList<>();
+    private List<CartProduct> productList = new ArrayList<>();
     private List<CustomAddress> addressList;
     private ImageView backArrowImgview;
+    private ViewGroup mainView;
     private Button confirOrderBtn;
     private int cartSize=0;
     @Override
@@ -87,6 +96,8 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
 
     private void setupViews(){
 
+        mainView = (ViewGroup)findViewById(R.id.mainView);
+        emptyView = (TextView)findViewById(R.id.emptyView);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         backArrowImgview = (ImageView)findViewById(R.id.backArrow);
@@ -106,7 +117,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
         addressRecylerView = (RecyclerView)findViewById(R.id.delRecylerview);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerVerticalItemDecoration(getApplicationContext());
-        cartRecylerAdapter = new CartRecylerAdapter(getApplicationContext(),productList,null);
+        cartRecylerAdapter = new CartRecylerAdapter(getApplicationContext(),productList,this);
         addressRecylerAdapter =new AddressRecylerAdapter(getApplicationContext(),addressList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         cartItemsRecylerView.setLayoutManager(layoutManager);
@@ -135,16 +146,26 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
     private void getCartInfo(CartDetailsResponse cartDetailsResponse){
 
         cartSize= cartDetailsResponse.getCartList().size();
-        productList = new ArrayList<>();
+        productList.clear();
+        if (cartSize==0){
+            Toast.makeText(getApplicationContext(),"Cart empty",Toast.LENGTH_SHORT).show();
+            hideViews();
+        }
         for(int i = 0; i< cartSize; i++){
 
-            loadProductDetails(cartDetailsResponse.getCartList().get(i).getProdId(),i);
+            loadProductDetails(cartDetailsResponse.getCartList().get(i).getProdId(),i,cartDetailsResponse);
 
         }
     }
+    private void hideViews(){
+
+        mainView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+
+    }
 
 
-    private void loadProductDetails(String id, final int pos){
+    private void loadProductDetails(String id, final int pos,final CartDetailsResponse cartDetailsResponse){
 
         RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient()
                 .create(RestAPIInterface.class);
@@ -157,9 +178,10 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
                                      Log.e(TAG,response.body().toString());
                                      if(response.code()==200){
 
-                                         productList.add(response.body());
-                                         if (pos==(cartSize-1))
-                                         cartRecylerAdapter.updateDataSource(productList,cartDetailsResponse.getCartList());
+                                         productList.add(new CartProduct(response.body(),cartDetailsResponse.getCartList().get(pos)));
+                                         List<Cart> cartList =(cartDetailsResponse.getCartList());
+                                         //if (pos==(cartSize-1))
+                                         cartRecylerAdapter.updateDataSource(productList);
                                      }
                                  }
 
@@ -183,7 +205,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
             responseCall.enqueue(new Callback<List<Address>>() {
                 @Override
                 public void onResponse(Call<List<Address>> call, Response<List<Address>> response) {
-                    Log.e(TAG,response.body().toString());
+                  //  Log.e(TAG,response.body().toString());
 
                     addressList = new ArrayList<>();
                     for (int i=0;i<response.body().size();i++){
@@ -336,4 +358,73 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
         dialog.show();
 
     }
+
+    @Override
+    public void updateCart(UpdateCartRequest updateCartRequest) {
+        final ProgressDialog progressDialog = CommonUtils.getProgressBar(CartDetailsActivity.this);
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String apiToken = SharedPreferncesController.getSharedPrefController(getApplicationContext()).getApiToken();
+        if(apiToken!=null && !apiToken.isEmpty()) {
+            Call<CartDetailsResponse> responseCall = apiInterface.updateCart(updateCartRequest,"Bearer " + apiToken);
+            responseCall.enqueue(new Callback<CartDetailsResponse>() {
+
+                                     @Override
+                                     public void onResponse(Call<CartDetailsResponse> call, Response<CartDetailsResponse> response) {
+                                         if(progressDialog!=null && progressDialog.isShowing()){
+                                             progressDialog.dismiss();
+                                         }
+                                       //  Log.e(TAG, response.body().toString());
+                                         getCartDetails();
+
+                                     }
+
+                                     @Override
+                                     public void onFailure(Call<CartDetailsResponse> call, Throwable t) {
+                                         if(progressDialog!=null && progressDialog.isShowing()){
+                                             progressDialog.dismiss();
+                                         }
+                                         Toast.makeText(getApplicationContext(), "Some Error occured", Toast.LENGTH_SHORT).show();
+
+                                     }
+
+                                 }
+            );
+        }
+    }
+
+    private void getCartDetails(){
+
+        RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient().create(RestAPIInterface.class);
+        String apiToken = SharedPreferncesController.getSharedPrefController(getApplicationContext()).getApiToken();
+        if(apiToken!=null && !apiToken.isEmpty()) {
+            Call<CartDetailsResponse> responseCall = apiInterface.getCartDetails("Bearer " + apiToken);
+            responseCall.enqueue(new Callback<CartDetailsResponse>() {
+
+                                     @Override
+                                     public void onResponse(Call<CartDetailsResponse> call, Response<CartDetailsResponse> response) {
+                                        // Log.e(TAG, response.body().toString());
+                                         HomeDataStore homeDataStore = HomeDataStore.getInstance();
+                                         homeDataStore.setCartDetailsResponse(response.body());
+                                         if (homeDataStore.getCartDetailsResponse()!=null){
+                                             cartDetailsResponse = homeDataStore.getCartDetailsResponse();
+                                             cartItemsCountTextview.setText(cartDetailsResponse.getCartList().size()+" Items");
+                                             subTotalTv.setText("Rs."+cartDetailsResponse.getSubTotal());
+                                             taxTv.setText("Rs."+cartDetailsResponse.getTax());
+                                             delivryTv.setText("Rs."+cartDetailsResponse.getDelivery());
+                                             totalPayTv.setText("Rs."+cartDetailsResponse.getCartTotal());
+                                             getCartInfo(cartDetailsResponse);
+                                         }
+                                     }
+
+                                     @Override
+                                     public void onFailure(Call<CartDetailsResponse> call, Throwable t) {
+                                         Toast.makeText(getApplicationContext(), "Some Error occured", Toast.LENGTH_SHORT).show();
+
+                                     }
+
+                                 }
+            );
+        }
+    }
+
 }
