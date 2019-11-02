@@ -135,6 +135,7 @@ import retrofit2.Response;
                 reviewTextview2.setText(productDetails.getRatingList().get(0).getRating()+" out of 5 Stars");
             }
             vendorTextview.setText(homeDataStore.getVendorNameMap().get(productDetails.getVendorId()));
+            if (homeDataStore.getCartDetailsResponse()!=null)
             cartCountTextview.setText(homeDataStore.getCartDetailsResponse().getCartList().size()+"");
             Picasso.with(this).load(RestAppConstants.BASE_URL +productDetails.getImageUrl() ).
                     placeholder(R.drawable.dummy_img).into(productImageview);
@@ -289,10 +290,12 @@ import retrofit2.Response;
 
                                      @Override
                                      public void onResponse(Call<CartDetailsResponse> call, Response<CartDetailsResponse> response) {
-                                         Log.e(TAG, response.body().toString());
-                                         HomeDataStore homeDataStore = HomeDataStore.getInstance();
-                                         homeDataStore.setCartDetailsResponse(response.body());
-                                         cartCountTextview.setText(response.body().getCartList().size()+"");
+                                         if (response.body()!=null){
+                                             Log.e(TAG, response.body().toString());
+                                             HomeDataStore homeDataStore = HomeDataStore.getInstance();
+                                             homeDataStore.setCartDetailsResponse(response.body());
+                                             cartCountTextview.setText(response.body().getCartList().size()+"");
+                                         }
                                          //  Toast.makeText(getApplicationContext(), response.body().toString(), Toast.LENGTH_SHORT).show();
                                      }
 

@@ -451,10 +451,13 @@ public class DashboardActivity extends AppCompatActivity implements SweetsFragme
 
                                      @Override
                                      public void onResponse(Call<CartDetailsResponse> call, Response<CartDetailsResponse> response) {
-                                         Log.e(TAG, response.body().toString());
-                                         HomeDataStore homeDataStore = HomeDataStore.getInstance();
-                                         homeDataStore.setCartDetailsResponse(response.body());
-                                         cartCountTextview.setText(response.body().getCartList().size()+"");
+                                         //Toast.makeText(getApplicationContext(),response.code()+": response code",Toast.LENGTH_SHORT).show();
+                                         if (response.body()!=null){
+                                             Log.e(TAG, response.body().toString());
+                                             HomeDataStore homeDataStore = HomeDataStore.getInstance();
+                                             homeDataStore.setCartDetailsResponse(response.body());
+                                             cartCountTextview.setText(response.body().getCartList().size()+"");
+                                         }
                                          //  Toast.makeText(getApplicationContext(), response.body().toString(), Toast.LENGTH_SHORT).show();
                                      }
 

@@ -13,6 +13,7 @@ import com.sb.sweetbucket.rest.request.RegisterRequest;
 import com.sb.sweetbucket.rest.request.UpdateCartRequest;
 import com.sb.sweetbucket.rest.response.AddCartResponse;
 import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.response.AvailableCouponResponse;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.Category;
 import com.sb.sweetbucket.rest.response.ConfirmOrderResponse;
@@ -219,4 +220,7 @@ public interface RestAPIInterface {
 
     @POST("api/updateCart")
     Call<CartDetailsResponse> updateCart(@Body UpdateCartRequest updateCartRequest, @Header("Authorization") String authorization);
+
+    @GET("api/availableCoupons")
+    Call<List<AvailableCouponResponse>> getAvailableCoupons(@Header("Authorization") String authorization);
 }

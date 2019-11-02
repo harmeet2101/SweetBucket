@@ -97,6 +97,31 @@
                 android:id="@+id/recylerview">
             </android.support.v7.widget.RecyclerView>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/couponView"
+                android:background="@drawable/background_rectangular_edittext"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/baseline_local_offer_black_24"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply coupon/Referrel"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="10dp"
+                    android:textSize="@dimen/text_size_16"/>
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -112,7 +137,8 @@
                 android:layout_height="1dp"
                 android:background="@android:color/holo_orange_dark"/>
 
-            <include android:layout_width="match_parent" android:layout_height="wrap_content"
+            <include android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 layout="@layout/layout_payment_info"/>
 
 

@@ -22,6 +22,7 @@ import com.sb.sweetbucket.adapters.AddressFragRecylerAdapter;
 import com.sb.sweetbucket.adapters.AddressRecylerAdapter;
 import com.sb.sweetbucket.adapters.CartRecylerAdapter;
 import com.sb.sweetbucket.adapters.CartRecylerAdapter.UpdateCartCallback;
+import com.sb.sweetbucket.adapters.CouponRecylerAdapter;
 import com.sb.sweetbucket.adapters.PaymentModeRecylerAdapter;
 import com.sb.sweetbucket.controllers.SharedPreferncesController;
 import com.sb.sweetbucket.model.HomeDataStore;
@@ -30,6 +31,7 @@ import com.sb.sweetbucket.rest.request.CheckPinRequest;
 import com.sb.sweetbucket.rest.request.PlaceOrderRequest;
 import com.sb.sweetbucket.rest.request.UpdateCartRequest;
 import com.sb.sweetbucket.rest.response.Address;
+import com.sb.sweetbucket.rest.response.AvailableCouponResponse;
 import com.sb.sweetbucket.rest.response.Cart;
 import com.sb.sweetbucket.rest.response.CartDetailsResponse;
 import com.sb.sweetbucket.rest.response.CartProduct;
@@ -41,6 +43,7 @@ import com.sb.sweetbucket.rest.response.Product;
 import com.sb.sweetbucket.utils.CommonUtils;
 import com.sb.sweetbucket.utils.DividerVerticalItemDecoration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +67,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
     private List<CartProduct> productList = new ArrayList<>();
     private List<CustomAddress> addressList;
     private ImageView backArrowImgview;
-    private ViewGroup mainView;
+    private ViewGroup mainView,couponView;
     private Button confirOrderBtn;
     private int cartSize=0;
     @Override
@@ -98,6 +101,7 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
 
         mainView = (ViewGroup)findViewById(R.id.mainView);
         emptyView = (TextView)findViewById(R.id.emptyView);
+        couponView = findViewById(R.id.couponView);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         backArrowImgview = (ImageView)findViewById(R.id.backArrow);
@@ -124,7 +128,44 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
         addressRecylerView.setHasFixedSize(true);
         addressRecylerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         addressRecylerAdapter.setOnItemClickListener(this);
+        couponView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                RestAPIInterface apiInterface = SweetBucketApplication.getApiClient().getClient()
+                        .create(RestAPIInterface.class);
+
+                String apiToken = SharedPreferncesController.getSharedPrefController(getApplicationContext()).getApiToken();
+
+                if(apiToken!=null && !apiToken.isEmpty()){
+                    Call<List<AvailableCouponResponse>> responseCall = apiInterface.getAvailableCoupons("Bearer " + apiToken);
+
+                    responseCall.enqueue(new Callback<List<AvailableCouponResponse>>() {
+                        @Override
+                        public void onResponse(Call<List<AvailableCouponResponse>> call, Response<List<AvailableCouponResponse>> response) {
+
+
+                            if (response.code()==200 && response.body()!=null && response.body().size()>0){
+
+                                Log.e(TAG,response.body().toString());
+                                Intent intent  = new Intent(getApplicationContext(),AvailableCouponActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("coupons", (Serializable) response.body());
+                                intent.putExtras(bundle);
+                                startActivityForResult(intent,200);
+
+                            }else
+                                Toast.makeText(getApplicationContext(),"Sorry no coupons available.",Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<AvailableCouponResponse>> call, Throwable t) {
+                            Log.e(TAG,t.getMessage());
+                        }
+                    });
+                }
+            }
+        });
 
 
         cartItemsRecylerView.setAdapter(cartRecylerAdapter);
@@ -141,6 +182,18 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode==200){
+
+            Bundle bundle = data.getExtras();
+            String couponCode = bundle.getString("couponCode");
+            Toast.makeText(getApplicationContext(),"Coupon functionality under devlopment",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getCartInfo(CartDetailsResponse cartDetailsResponse){
@@ -425,6 +478,16 @@ public class CartDetailsActivity extends AppCompatActivity implements AddressRec
                                  }
             );
         }
+    }
+
+
+    private void showCouponDialog(List<AvailableCouponResponse> responseList){
+        final Dialog dialog = new Dialog(CartDetailsActivity.this);
+        // dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.layout_coupon_dialog);
+
+        dialog.show();
     }
 
 }
